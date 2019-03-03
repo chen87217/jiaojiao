@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script type="text/javascript" src="../../js/mui.min.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="../../css/mui.min.css"  />
+		<link  rel="stylesheet"  href="../../css/app.css"  />
+		
+		<style>
+	    	.my-content{ margin-top: 40px; margin-left: auto; margin-right: auto; text-align: center;}
+	    	#title{ font-size: 20px; font-weight: 600; line-height: 32px; }
+	    	.remark{ font-size: 12px; color:rgba(0, 0, 0, 0.5); line-height: 20px; margin-top: 5px;}
+	    	form{ margin-top:50px;}
+	    	.body-input{ width: 80%; margin:auto auto;}
+	    	.body-input textarea{ border-left: 0px; border-right: 0px; border-top:0px; padding-left: 0; overflow-y:hidden;}
+	    	.body-button{ margin-top:40px;}
+	    	#btn_sumbit{  
+	    		background-color:#70b163;;
+			    color:white;
+			    border-radius: 2em;
+			    width:80%;
+			    font-size: 17px;
+			    border: none;
+			}
+	    </style>
+		
+	</head>
+
+	<body>
+		
+		<header id="header" class="mui-bar mui-bar-transparent">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		</header>
+		<div class='zwf'></div>
+		<div class="mui-content my-content">
+			<div id='title'>产品建议</div>
+			<div class='remark'>发现不足之处，烦请告知</div>
+			
+			<form>
+				<div class="body-input">
+					<textarea id="content" rows="1" placeholder=""></textarea>
+				</div>
+				<div class="body-button">
+				   <button type="button" id="btn_sumbit">提交建议</button>
+				</div>
+			</form>
+		</div>
+		
+		
+		<script type="text/javascript" src="../../js/app.js" charset="utf-8"></script>
+		<script type="text/javascript">
+			app.init({}, false, true, false);
+			
+			var btn_sumbit = document.getElementById('btn_sumbit');
+			var content = document.getElementById('content');
+			btn_sumbit.disabled = true;
+			btn_sumbit.style.backgroundColor = '#d7d7d7';
+			
+			app.listen(btn_sumbit, 'tap', function(){
+				var name = content.value ? content.value.trim() : "";
+				if(name == ""){
+					msg = '请先输入建议的内容!';
+					args = {};
+					args.duration=2000,
+				    args.location='bottom'
+				    app.toast(msg, args);
+				    return ;
+				}
+				app.ajax('/Member/Set/Advise',{ token:token, content: name }, function(data){
+					if(data.code == 0){
+						
+					}else{
+						
+					}
+				});
+			});
+			
+			app.listen(content, 'input', function(){
+				content.style.height = content.scrollHeight+'px';
+		  		if(content.value.length > 0){
+		    		btn_sumbit.disabled = false;
+		    		btn_sumbit.style.backgroundColor = '#70b163';
+		  		}else{
+		    		btn_sumbit.disabled = true;
+		    		btn_sumbit.style.backgroundColor = '#d7d7d7';
+		  		}
+			});
+		</script>
+	</body>
+
+</html>

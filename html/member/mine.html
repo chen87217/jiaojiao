@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>我的</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script type="text/javascript" src="../../js/mui.min.js" charset="utf-8">></script>
+		<link  rel="stylesheet"  href="../../css/mui.min.css"  />
+		<link  rel="stylesheet"  href="../../css/app.css"  />
+		<link  rel="stylesheet"  href="../../css/iconfont.css"  />
+		
+		<style type="text/css">
+			.mui-card>.mui-table-view>.mui-table-view-cell:last-child:after{ height: 1px;}
+			.mui-table-view-cell i{ display: inline-block; font-size:20px; color:rgba(0, 0, 0, 0.18);}
+			.mui-media-body{ line-height: 42px; font-size: 17px;}
+		</style>
+		
+	</head>
+
+	<body>
+		
+		<div class="mui-content">
+			<div class="mui-card" style="margin-bottom: 35px;">
+				<ul class="mui-table-view mui-table-view-chevron">
+					<li class="mui-table-view-cell mui-media margin-50" data-url='account.html' data-id='account'>
+						<a class="mui-navigate-right">
+							<i class='mui-media-object mui-pull-left icon-person' style="font-size:24px;"></i>
+							<div class="mui-media-body">
+								我
+							</div>
+						</a>
+					</li>
+					<li class="mui-table-view-cell mui-media margin-30" data-url='../tags/mytag.html' data-id='mytag'>
+						<a class="mui-navigate-right" >
+							<i class='mui-media-object mui-pull-left icon-tag' style="font-size:24px;"></i>
+							<div class="mui-media-body">
+								标签
+							</div>
+						</a>
+					</li>
+					<li class="mui-table-view-cell mui-media" data-url='credit.html' data-id='credit'>
+						<a class="mui-navigate-right">
+							<i class='mui-media-object mui-pull-left icon-credit_card' style="font-size:24px;"></i>
+							<div class="mui-media-body">
+								信用分
+							</div>
+						</a>
+					</li>
+					
+					<li class="mui-table-view-cell mui-media margin-50" data-url='../setting/index.html' data-id='setting'>
+						<a class="mui-navigate-right">
+							<i class='mui-media-object mui-pull-left icon-gear' style="font-size:24px;"></i>
+							<div class="mui-media-body">
+								设置
+							</div>
+						</a>
+					</li>
+				</ul>
+			</div>
+			
+              
+			
+		</div>
+		
+		
+		<script type="text/javascript" src="../../js/app.js" charset="utf-8"></script>
+		<script type="text/javascript">
+			app.init({}, false, true, false);
+			
+			function Ready(){
+				app.bind('.mui-table-view', 'li', 'tap', function(el){
+					args = {};
+					args.url = el.getAttribute('data-url');
+					args.id = el.getAttribute('data-id');
+					app.open(args);
+				});
+			}
+			
+			Ready();
+			
+		</script>
+	</body>
+
+</html>

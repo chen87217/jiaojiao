@@ -1,0 +1,218 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>搜索</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script type="text/javascript" src="../../js/mui.min.js" charset="utf-8"></script>
+		<link rel="stylesheet"  href="../../css/reset.css"  />
+		<link rel="stylesheet"  href="../../css/mui.min.css"  />
+		<link  rel="stylesheet"  href="../../css/app.css"  />
+		<link  rel="stylesheet"  href="../../css/iconfont.css"  />
+		<style>
+			.bg{ bottom: 0px; left: 0; height: 180px; width: 100%; z-index: -10;}
+			.bg img{  width: 100%; opacity: 0.2;}
+			
+			.input-search{ margin-left:1.5rem; margin-right:1.5rem; border-bottom:2px solid rgba(37, 155, 36, 1); }
+			.search{ color:green;font-weight:700; top:-2px; left: 0px; }
+			.input-search input[class=tags]{ border:none; padding: 0rem 0rem; display:inline-block; width:60px; height:auto;  margin-bottom: 5px;}
+			.input-search input[class=tags]::-webkit-input-placeholder{ color:rgba(0, 0, 0, 0.12); font-size:16px;}
+			
+			
+			.mui-content{ margin-left: 1.5rem; margin-right: 1.5rem;}
+			
+			.mytags{ margin-right: 19px;}
+			.mytags{ 
+				display: inline-block;
+		        border-radius:2em;
+		        width: auto;
+		        height:auto;
+		        float: left;
+		        padding-left: 5px;
+		        padding-right:5px;
+		        margin-top: 25px;
+		        font-size: 12px;
+			}
+			
+			.default { background-color: rgba(0, 0, 0, 0.04);  color: rgba(0, 0, 0, 0.76);}
+			
+			.select{ background-color: rgba(37, 155, 36, 1);  color: #fff; }
+			
+			
+			#add{
+				top:0px;
+				right:0px;
+				width:80px;
+				border-radius:2em;
+				text-align: center;
+				background-color:rgba(37, 155, 36, 1); 
+				color:#fff;
+			}	
+			
+			.mui-scroll div{ 
+				padding:1px 8px; 
+				border-radius:2em;
+				font-size: 10px;
+		        background-color: rgba(0, 0, 0, 0.04);  
+		        color: rgba(0, 0, 0, 0.76);
+				margin-right:2px;
+			}
+			
+			.mui-segmented-control .mui-control-item{ height: auto; line-height: 26px;}
+			
+		</style>
+		
+	</head>
+
+	<body>
+		
+		<header id="header" class="mui-bar mui-bar-transparent">
+			<a class=""></a>
+		</header>
+		<div class='zwf'></div>
+		
+		<div class='input-search local-relative'>
+	        <span class="mui-icon icon-search search local-absolute" ></span>
+	      
+			<div>
+				<div id="nav-w" style="max-width: 10rem; min-width: 1.5rem; padding-bottom: 0.5rem;">
+				    <div id="sliderSegmentedControl" class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted mui-pull-left">
+						<div class="mui-scroll my-nav-scroll">
+						</div>
+					</div>
+				</div>
+				<input type="text" id='tags' class="tags" autofouse/>
+				
+				<div id='add' class='local-absolute'>群发</div>
+			</div>
+			
+	        
+	    </div>
+	   <div class="clearfix"></div>
+	   	<div class="mui-content">
+	   		<div id="moban"></div>
+	   	</div>
+	   
+	   	<div class='bg local-fixed'>
+	   		<img src='../../image/txl.png'  />
+	   	</div>
+		
+		<script id='msg-template' type="text/template">
+			<% for(var i in record){ var item=record[i]; %>
+				<div class="mytags default" data-id="<%=(item.tagId)%>"><%=(item.tagName)%></div>	
+			<% } %>
+		</script>
+		
+		<script type="text/javascript" src="../../js/app.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/jquery.min.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/arttmpl.js"></script>
+		<script type="text/javascript">
+			
+			var tags = document.getElementById('tags'); //输入框 
+	        var add = document.getElementById('add');
+			add.style.display = 'none';
+			app.init({}, false, true, false);
+			
+			var default_data = [
+				{ tagId: 1, tagName: '中国' },
+				{ tagId: 2, tagName: '湖北' },
+				{ tagId: 3, tagName: '武汉' },
+				{ tagId: 4, tagName: '女' },
+				{ tagId: 5, tagName: '互联网' },
+				{ tagId: 6, tagName: '武汉理工大学' },
+				{ tagId: 7, tagName: '高尔夫' }
+			];
+			g_mui.plusReady(function(){
+				var datasource = [];  //数据源
+				
+				plus.nativeUI.showWaiting();
+				
+				if(window.localStorage.getItem('tags') == undefined){
+					initData();
+				}else{
+					loadData(JSON.parse(window.localStorage.getItem('tags')));
+				}
+			});
+			
+			function initData(){
+				app.ajax('/Member/Tags', {  token: token }, function(data){
+					if(data.code == 0){
+						datasource = data.data;
+					}else{
+						datasource = default_data;
+					}
+					window.localStorage.setItem('tags', JSON.stringify(datasource));
+					loadData(datasource);
+				}, 'get');
+			}
+			
+			function loadData(data){
+				var html = template('msg-template',{ record:data });
+				moban.innerHTML = html;
+				app.closeWait();
+			}
+			
+			/*点击选择下边标签*/
+			app.bind('#moban', 'div', 'tap', function(el){
+				var curr_value = el.innerHTML;
+				tags.setAttribute('placeholder', '');
+				tags.value = '';
+				
+				$('.mytags').each(function(index, item){
+					if(curr_value==item.innerHTML){
+						if($(this).hasClass('select')){
+							$(this).removeClass('select').addClass('default');
+						}else{
+							$(this).removeClass('default').addClass('select');
+							var curr_div = document.createElement("div");
+							curr_div.setAttribute('class','mui-control-item');
+							curr_div.innerHTML =  curr_value.trim()	;
+							document.getElementsByClassName('my-nav-scroll')[0].appendChild(curr_div);
+							$('.search').css('display','none');
+						} 
+					}
+				});
+				
+				if($('.my-nav-scroll div').length > 0){
+					add.style.display = 'block';
+				}else{
+					add.style.display = 'none';
+				}
+			});
+			
+			/*回车或 空格*/
+			app.listen(tags, 'keyup',function(e){
+				e = event || window.event;
+				if(e.keyCode == 13 || e.keyCode == 32){
+					if(tags.value.trim() != ''){
+						var curr_div = document.createElement("div");
+						curr_div.setAttribute("class", "display:inline-block;");
+						curr_div.innerHTML =  tags.value.trim()	;
+						document.getElementsByClassName('my-nav-scroll')[0].appendChild(curr_div);
+						$('.search').css('display','none');
+						tags.value = '';
+					}
+					
+					if($('.my-nav-scroll div').length > 0){
+						add.style.display = 'block';
+					}else{
+						add.style.display = 'none';
+					}
+					
+				}
+				
+			});
+		
+		
+			app.listen(add, 'tap', function(){
+				args = {};
+				args.url = 'addTopic.html';
+				args.id = 'addTopic';
+				args.extras = {};
+				app.open(args);
+			})
+		</script>
+	</body>
+
+</html>

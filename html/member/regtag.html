@@ -1,0 +1,314 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script type="text/javascript" src="../../js/mui.min.js" charset="utf-8"></script>
+		<link rel="stylesheet"  href="../../css/mui.min.css"  />
+		<link rel="stylesheet"  href="../../css/app.css"  />
+		<link rel="stylesheet"  href="../../css/swiper-4.4.1.min.css"  />
+		
+		<style>
+		  	html,body{  position: relative; height: 100vh; overflow-y: hidden;}
+		 	.swiper-container {
+		      	width: 100%;
+		      	height: 100vh;
+			}
+		    .title{
+		        font-size: 35px;
+		      	font-weight: bold;
+		      	color:#98c25d;
+		      	display: flex;
+		      	justify-content: center;
+		      	margin-top: 3rem;
+		      	margin-bottom:1rem;
+		    }
+		    .initialtags{
+			    display: flex;
+			   	flex-direction: column;
+		    }
+		    .initialtags:after{ clear: both; height: 0px;}
+		    .hobbytags{
+			    width: auto;
+			    height:auto;
+			    float: left;
+		    }
+		    
+		    .upup {
+			    display: flex;
+			    justify-content: center;
+			    margin-top: 3rem;
+		    }
+		    
+		    /*字体大小自适应*/
+		    @media screen and (min-width: 720px){ /*当屏幕尺寸小于600px时，应用下面的CSS样式*/
+			    .hobbytags {
+			        font-size: 1rem;
+			        background-color: #EEEEEE;
+			        border-radius:1em;
+			        padding:0.5rem 1.8rem;
+			        margin-left:0.8rem;
+			        margin-top: 1.8rem;
+			    }
+		    }
+		    @media screen and (min-width: 420px) and (max-width: 720px)  { /*当屏幕尺寸小于600px时，应用下面的CSS样式*/
+			    .hobbytags {
+			        font-size: 1rem;
+			        background-color: #EEEEEE;
+			        border-radius:1em;
+			        padding:0.5rem 1.8rem;
+			        margin-left:0.8rem;
+			        margin-top: 1.8rem;
+			    }
+		    }
+		    @media screen and (max-width: 420px)  {
+			    .hobbytags {
+			        font-size: 0.8rem;
+			        background-color: #EEEEEE;
+			        border-radius:1em;
+			        padding:0.3rem 0.5rem;
+			        margin-left:0.5rem;
+			        margin-top: 0.5rem;
+			    }
+		    }
+		
+		    .hobbytags.active{
+			    background-color: green;
+			    color:white;
+		    }
+			
+		    .columntag{
+			    display: flex;
+			    justify-content: center;
+		    }
+		
+		    .button2{
+			    display: flex;
+			    background-color: #C6E2A7;
+			    color:white;
+			    border-radius: 2em;
+			    width: auto;
+			    height: auto;
+			    padding: 0.6rem 5rem;
+			    font-size: 17px;
+			    outline:none;
+			    border:none;
+		    }
+		    .loginbutton{
+			    display:flex;
+			    justify-content: center;
+			    margin-top:1rem;
+		    }
+		   
+		   	
+		  </style>
+	</head>
+
+	<body>
+		<div class="mui-content">
+	  		<div class="swiper-container swiper-no-swiping" id='swiper-container'>
+			    <div class="swiper-wrapper">
+					<div class="swiper-slide">
+						<!--兴趣-->
+						<div id="xq">
+							<div class="title">我的兴趣</div>
+				  			<div class="initialtags" >
+						        <div class="columntag">
+						            <div class="hobbytags"  tapmode onclick="addregistertag(this)">美食</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">旅游</div>
+						        </div>
+						        <div class="columntag">
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">音乐</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">抖友</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">摄影</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">自驾游</div>
+					            </div>
+					        	<div class="columntag">
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">足球</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">乒乓球</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">篮球</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">羽毛球</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">台球</div>
+					        	</div>
+						        <div class="columntag">
+						            <div class="hobbytags"tapmode onclick="addregistertag(this)">钓鱼</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">荒野求生</div>
+						            <div class="hobbytags"tapmode onclick="addregistertag(this)">游戏</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">看书</div>
+						        </div>
+							    <div class="columntag">
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">健身</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">武术</div>
+						    	</div>
+					          	<div class="columntag">
+					            	<div class="hobbytags" tapmode onclick="addregistertag(this)">书画</div>
+					          	</div>
+					          	<div class="upup">
+					            	<img src="../../image/upup.png" class='up'/>
+					          	</div>
+					       	</div>
+						</div>
+					</div>
+					
+					<div class="swiper-slide">
+						<!--行业-->
+						<div id="hy">
+							<div class="title">我的工作</div>
+				  			<div class="initialtags"  >
+					          	<div class="columntag">
+					            	<div class="hobbytags" tapmode onclick="addregistertag(this)">学生</div>
+					          	</div>
+					          	<div class="columntag">
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">互联网</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">金融</div>
+					          	</div>
+					          	<div class="columntag">
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">工业</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">农业</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">餐饮服务</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">物流</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">建筑</div>
+					          	</div>
+					          	<div class="columntag">
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">医生</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">律师</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">教育</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">广告传媒</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">娱乐</div>
+					          	</div>
+					          	<div class="columntag">
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">采购</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">行政人事</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">销售</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">财务</div>
+					          	</div>
+					          	<div class="columntag">
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">CTO</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">PM</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">CEO</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">VC</div>
+					          	</div>
+					          	<div class="columntag">
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">工人</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">厨师</div>
+						            <div class="hobbytags" tapmode onclick="addregistertag(this)">司机</div>
+					          	</div>
+					          	<div class="columntag">
+					            	<div class="hobbytags" tapmode onclick="addregistertag(this)">政府机关</div>
+					          </div>
+			    			</div>
+			    			<div class="loginbutton">
+			      				<button type="button" id="btn_sumbit" class="button2" tapmode onclick="addTags()" >开始使用</button>
+			  				</div>
+						</div>
+	  				</div>
+	  			</div>
+	  		</div>
+	  	</div>
+		
+		<script type="text/javascript" src="../../js/app.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/jquery.min.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/swiper-4.4.1.min.js" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			app.init({}, true, false, false);
+			
+			var xq;     //选择兴趣
+	        var hy;     //选择行业
+	        var upup;   //下拉图标
+			var swiper;
+			function Ready(){
+				xq = document.getElementById('xq');     //选择兴趣
+	        	hy = document.getElementById('hy');     //选择行业
+	        	upup = document.getElementsByClassName('upup')[0];   //下拉图标
+	        	step = 1;
+	        	swiper = new Swiper('.swiper-container', {direction: 'vertical'});
+			}
+			
+			Ready();
+			
+			
+			app.listen(upup, 'touchstart',function(){
+			   	if($('#swiper-container').hasClass('swiper-no-swiping')){
+			   		msg = '至少选择2以上兴趣';
+			   		options = {};
+			   		options.verticalAlign = 'middle';
+			   		app.toast(msg, options);
+			   	}
+		  	});
+        	
+        	g_mui('.columntag').on('tap','div' ,function(){
+        		addregistertag(this);
+        	});
+        	
+        	function addregistertag(el){ 			
+		        if($(el).hasClass('active')){
+		      		$(el).removeClass('active');
+		        }else{
+		      		$(el).addClass('active');
+		        }
+		        
+		        var xin_tags = $('.initialtags').first().find('.hobbytags.active');   //已选择兴趣的标签
+		        if(xin_tags.length >= 2){
+			        if($('#swiper-container').hasClass('swiper-no-swiping'))
+			        {
+			        	$('#swiper-container').removeClass('swiper-no-swiping');
+			        	swiper.update(); 
+			        }
+			    }else{
+			      	if(!$('#swiper-container').hasClass('swiper-no-swiping'))
+			        {
+			        	$('#swiper-container').addClass('swiper-no-swiping');
+			        	swiper.update();
+			        }
+			    }
+		        
+		        var gz_tags = $('.initialtags').eq(1).find('.hobbytags.active');   //已选择工作的标签
+		        if(gz_tags.length > 0){
+			        btn_sumbit.style.backgroundColor = '#98c25d';
+			        btn_sumbit.disabled = false; //启用使用按钮
+		        }else{
+			        btn_sumbit.style.backgroundColor = '#C6E2A7';
+			        btn_sumbit.disabled = true; //禁止使用按钮
+		        }
+		  	}
+			
+			function addTags(){
+			    var selectTag = $('.hobbytags.active');
+			    var tagName = {};
+			    for(var i=0,len=selectTag.length;i<len;i++){
+			      	tagName[i] = selectTag[i].innerHTML.trim();
+			    }
+			    if(JSON.stringify(tagName) == '{}'){
+			    	msg = '请先选择标签';
+			    	options = {};
+			    	app.toast(msg, options);
+			      	return;
+			    }
+			    
+			    app.ajax('/Member/RegTag',{
+						mobile:zmobile,
+			            type:1, // 默认0是新建单个标签，此处1是新建多个标签
+			            tagName:tagName,
+			            uuid: uuid
+					},function(data){
+						if(data.code == 0){
+							window.localStorage.setItem('token', data.data.token);
+							window.localStorage.setItem('zmobile', zmobile);
+							window.localStorage.setItem('mb', zmobile);
+							window.localStorage.setItem('step', 2);
+							args = {};
+							args.url = "../../main.html";
+							args.id = "main";
+							app.open(args);
+						}
+					}
+				);
+			}
+			
+			
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,168 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>性别</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script type="text/javascript" src="../../js/mui.min.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="../../css/mui.min.css"  />
+		<link rel="stylesheet" href="../../css/app.css"  />
+		
+		<style>
+			.my-content{ margin-top: 40px; margin-left: auto; margin-right: auto; text-align: center;}
+	    	#title{ font-size: 20px; font-weight: 600; line-height: 32px; }
+	    	.remark{ font-size: 12px; color:rgba(0, 0, 0, 0.5); line-height: 20px; margin-top: 5px;}
+	    	form{ margin-top:50px;}
+	    	.body-input{ width: 80%; margin:auto auto;  display: flex; justify-content: center; align-items: center;}
+	    	.body-button{ margin-top:40px;}
+	    	#btn_sumbit{  
+	    		background-color:#d7d7d7;
+			    color:white;
+			    border-radius: 2em;
+			    width:80%;
+			    font-size: 17px;
+			    border: none;
+			}
+			
+			.circle{
+			    width: 7rem;
+			    height: 7rem;
+			    margin: auto auto;
+			    text-align: center;
+			}
+			
+			.circle>div{
+				border-radius: 50%;
+			  	line-height: 7rem;
+			}
+			
+			.default{
+				border: 1px solid #000;
+				background-color:white;
+			    color:#000;
+			    opacity: 0.5;
+			}
+			 
+			.select{
+				border: none;
+				background-color:rgba(137, 164, 210, 1);
+			    color:white;
+			    opacity: 0.5;
+			}
+		</style>
+		
+		
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-transparent">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		</header>
+		<div class='zwf'></div>
+		<div class="mui-content my-content">
+			<div id='title'>我的性别</div>
+			<form>
+				<div class="body-input">
+					<div class="circle">
+						<div class='default' data-v='男'>男</div>
+  					</div>
+					<div class="circle">
+						<div class='default' data-v='女'>女 </div>
+					</div>
+				</div>
+				<div class="body-button">
+				   <button type="button" id="btn_sumbit">保存</button>
+				</div>
+			</form>
+		</div>
+		
+		<script type="text/javascript" src="../../js/jquery.min.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/app.js" charset="utf-8"></script>
+		
+		<script type="text/javascript">
+			
+			var curr_value = '';
+			var btn_sumbit = document.getElementById('btn_sumbit');
+			btn_sumbit.disabled = true;
+			btn_sumbit.style.backgroundColor = '#d7d7d7';
+			
+			app.init({}, false, true, false);
+			
+			g_mui.plusReady(function(){
+				var self = plus.webview.currentWebview();
+				curr_value = self.curr_val;
+				
+				$('.circle>div').each(function(index, item){
+					if(curr_value==item.getAttribute('data-v')){
+						$(this).removeClass('default').addClass('select');
+					}else{
+						if($(this).hasClass('select')){
+							$(this).removeClass('select').addClass('default');
+						}
+					}
+					
+				});
+				
+			});
+			
+			
+			app.bind('.circle', 'div', 'tap', function(el){
+				curr_value = el.getAttribute('data-v');
+				$('.circle>div').each(function(index, item){
+					if(curr_value==item.getAttribute('data-v')){
+
+						$(this).removeClass('default').addClass('select');
+
+					}else{
+						if($(this).hasClass('select')){
+							$(this).removeClass('select').addClass('default');
+						}
+
+					}
+				});
+				chgColor();
+			});
+				
+			app.listen(btn_sumbit, 'tap', function(){
+				if(curr_value == ""){
+					msg = '请先选择性别！';
+					options = {};
+					options.duration = 2000;
+					options.location = 'bottom';
+					app.toast(msg, options);
+				    return ;
+				}
+				
+				app.ajax('/Member/Update', { token:token, sex: curr_value }, function(data){
+					if(data.code == 0){
+						app.tigger('account','update_set',{ 
+			                v:curr_value,
+			                k:'sex'
+			            });
+						g_mui.back(); 
+					}else{
+						app.tigger('account','update_set',{ 
+			                v:curr_value,
+			                k:'sex'
+			            });
+						g_mui.back(); 
+					}
+				})
+				
+			});
+			
+			function chgColor(){
+				if(curr_value == ''){
+					btn_sumbit.disabled = true;
+					btn_sumbit.style.backgroundColor = '#d7d7d7';
+				}else{
+					btn_sumbit.disabled = false;
+     				btn_sumbit.style.backgroundColor = '#70b163';
+				}
+			}	
+			
+		</script>
+	</body>
+
+</html>

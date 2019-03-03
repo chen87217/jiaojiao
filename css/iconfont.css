@@ -1,0 +1,80 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('../fonts/icomoon.eot?ccef6y');
+  src:  url('../fonts/icomoon.eot?ccef6y#iefix') format('embedded-opentype'),
+    url('../fonts/icomoon.ttf?ccef6y') format('truetype'),
+    url('../fonts/icomoon.woff?ccef6y') format('woff'),
+    url('../fonts/icomoon.svg?ccef6y#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-camera:before {
+  content: "\e900";
+}
+.icon-circle-left:before {
+  content: "\e901";
+}
+.icon-comment:before {
+  content: "\e902";
+}
+.icon-control_point:before {
+  content: "\e903";
+}
+.icon-credit_card:before {
+  content: "\e904";
+}
+.icon-emoticon:before {
+  content: "\e905";
+}
+.icon-flag-o:before {
+  content: "\e906";
+}
+.icon-gear:before {
+  content: "\e907";
+}
+.icon-globe:before {
+  content: "\e908";
+}
+.icon-more:before {
+  content: "\e909";
+}
+.icon-more-o:before {
+  content: "\e90a";
+}
+.icon-people-outline:before {
+  content: "\e90b";
+}
+.icon-person:before {
+  content: "\e90c";
+}
+.icon-plus:before {
+  content: "\e90d";
+}
+.icon-plus-o:before {
+  content: "\e90e";
+}
+.icon-search:before {
+  content: "\e90f";
+}
+.icon-tag:before {
+  content: "\e910";
+}
+.icon-trash:before {
+  content: "\e911";
+}

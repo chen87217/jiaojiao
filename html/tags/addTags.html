@@ -1,0 +1,162 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>添加标签</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script type="text/javascript" src="../../js/mui.min.js" charset="utf-8"></script>
+		<link rel="stylesheet"  href="../../css/mui.min.css"  />
+		<link  rel="stylesheet"  href="../../css/app.css"  />
+		
+		<link rel="stylesheet"  href="../../css/login.css"  />
+		
+		<style>
+	    	.my-content{ margin-top: 40px; margin-left: auto; margin-right: auto; text-align: center;}
+	    	#title{ font-size: 20px; font-weight: 600; line-height: 32px; }
+	    	
+	    	form{ margin-top:50px;}
+	    	.body-input{ width: 95%; margin:auto auto; position: relative;}
+	    	.body-input input{ border-left: 0px; border-right: 0px; border-top:0px; padding-left: 0;}
+	    	.body-button{ margin-top:60px;}
+	    	#btn_sumbit{  
+	    		background-color:#70b163;;
+			    color:white;
+			    border-radius: 2em;
+			    width:95%;
+			    font-size: 17px;
+			    border: none;
+			}
+			
+			.body-input textarea{ border-left: 0px; border-right: 0px; border-top:0px; padding-left: 0;}
+	    </style>
+		
+	</head>
+
+	<body>
+		
+		<header id="header" class="mui-bar mui-bar-transparent">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		</header>
+		<div class='zwf'></div>
+		<div class="mui-content my-content">
+			<div id='title'>添加标签</div>
+			
+			<form>
+				<div class="body-input">
+					<input type='text' class='my-placehoder' placeholder="输入标签名" name="tagName" id="tagName"  />
+					<span>8</span>
+					<label style="color:green; float:left; margin-top:5px" id="des">添加标签说明</label>
+				</div>
+				<div class="body-button">
+				   <button type="button" id="btn_sumbit">确定</button>
+				</div>
+			</form>
+		</div>
+		
+		<div id="div" style="top: 20%;"></div>
+		<div id="popover" class="mui-popover" style="height:240px; background-color: #fff; ">
+			<div class="header">
+				<a class="mui-icon mui-pull-right"></a>
+				<h1 class="mui-title">标签说明</h1>
+			</div>
+			<div style="top: 44px; bottom: 48px;">
+				<form style=" margin-left:0px; margin-right: 0px;">
+				  	<div class="body-input" >
+						<textarea rows="1" class='my-placehoder' placeholder="标签说明" name="tagdesc" id="tagdesc" >
+						</textarea>
+						<span>20</span>
+					</div>
+				</form>
+			</div>
+			<div class='footer'>
+			  	<div class="my-btn-cancle" id='btn_cancle' >取消</div>
+			  	<div class="my-btn-reg" id='btn_ok'>确定</div>
+			</div>		
+		</div>
+		
+		<script type="text/javascript" src="../../js/app.js" charset="utf-8"></script>
+		
+		<script type="text/javascript">
+			
+			var btn_sumbit = document.getElementById('btn_sumbit');
+			var tagName = document.getElementById('tagName');
+			var des = document.getElementById('des');
+			var curr_tag_des = '';
+			btn_sumbit.disabled = true;
+			btn_sumbit.style.backgroundColor = '#d7d7d7';
+			
+			app.init({}, false, true, false);
+			
+			app.listen(btn_sumbit, 'tap', function(){
+				var name = tagName.value ? tagName.value.trim() : "";
+				
+				if(name == ""){
+					msg = '';
+					options = {};
+					options.duration = 2000;
+					options.location = 'bottom';
+				    app.toast(msg, options);
+				    return ;
+				}
+				
+				app.ajax('/tags/addMytag', {
+						token:token,
+              			tagName: name,
+              			des: curr_tag_des
+					}, function(data){
+						if(data.code == 0){
+							
+						}
+					}
+				);
+				
+			});
+				
+			app.listen(tagName, 'input', function(){
+				if(tagName.value.length > 0){
+		  			if(tagName.value.length >= 8){
+		  				tagName.value = tagName.value.substring(0, 8);
+		  			}
+		    		btn_sumbit.disabled = false;
+		    		btn_sumbit.style.backgroundColor = '#70b163';
+		  		}else{
+		    		btn_sumbit.disabled = true;
+		    		btn_sumbit.style.backgroundColor = '#d7d7d7';
+		  		}
+			});
+			
+			var btn_cancle = document.getElementById("btn_cancle");  //不同意按钮
+			var btn_ok = document.getElementById("btn_ok");   //同意按钮
+			var tagdesc = document.getElementById("tagdesc");
+			app.listen(document, 'zc_popover', function(){
+				g_mui("#popover").popover('toggle', document.getElementById("div"));
+				tagdesc.value = curr_tag_des;
+			});
+			
+			app.listen(des, 'tap', function(){
+				g_mui.trigger(document, 'zc_popover');
+			});
+			
+			app.listen(btn_cancle, "tap",function(){
+				g_mui.trigger(document, 'zc_popover');
+			});
+			
+			app.listen(btn_ok, "tap",function(){
+				if(tagdesc.value.trim().length > 0){
+					curr_tag_des = tagdesc.value.trim();
+				}
+		   		g_mui.trigger(document, 'zc_popover');
+			});
+			
+			
+			app.listen(tagdesc, 'input', function(el){
+				if(el.value.length >= 20){
+	  				el.value = el.value.substring(0, 20);
+	  			}
+			});
+			
+		</script>
+	</body>
+
+</html>

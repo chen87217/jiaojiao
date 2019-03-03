@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>个性</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script type="text/javascript" src="../../js/mui.min.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="../../css/mui.min.css"  />
+		<link rel="stylesheet" href="../../css/app.css"  />
+		
+		 <style>
+			.my-content{ margin-top: 40px; margin-left: auto; margin-right: auto; text-align: center;}
+	    	#title{ font-size: 20px; font-weight: 600; line-height: 32px; }
+	    	.remark{ font-size: 12px; color:rgba(0, 0, 0, 0.5); line-height: 20px; margin-top: 5px;}
+	    	form{ margin-top:50px;}
+	    	.body-input{ width: 80%; margin:auto auto;position: relative;}
+	    	.body-input textarea{ border-left: 0px; border-right: 0px; border-top:0px; padding-left: 0;}
+	    	
+	    	.body-button{ margin-top:40px;}
+	    	#btn_sumbit{  
+	    		background-color:#70b163;;
+			    color:white;
+			    border-radius: 2em;
+			    width:80%;
+			    font-size: 17px;
+			    border: none;
+			}
+		</style>
+		
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-transparent">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		</header>
+		<div class='zwf'></div>
+		<div class="mui-content my-content">
+			<div id='title'>个性签名</div>
+			
+			<form>
+				<div class="body-input">
+					<textarea id="signature" rows="1" placeholder=""></textarea>
+					<span>15</span>
+				</div>
+				<div class="body-button">
+				   <button type="button" id="btn_sumbit">保存</button>
+				</div>
+			</form>
+		</div>
+		
+		<script type="text/javascript" src="../../js/jquery.min.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/app.js" charset="utf-8"></script>
+		<script type="text/javascript">
+			
+			var btn_sumbit = document.getElementById('btn_sumbit');
+			var signature = document.getElementById('signature');
+			btn_sumbit.disabled = true;
+			btn_sumbit.style.backgroundColor = '#d7d7d7';
+			
+			app.init({}, false, true, false);
+			g_mui.plusReady(function(){
+				var self = plus.webview.currentWebview();
+				//signature.innerHTML = self.curr_val;
+				$('#signature').val(self.curr_val);
+			});
+			
+			
+			app.listen(signature, 'input', function(el){
+				if(el.value.length > 0){
+		  			if(el.value.length >= 15){
+		  				el.value = el.value.substring(0, 15);
+		  			}
+		    		btn_sumbit.disabled = false;
+		    		btn_sumbit.style.backgroundColor = '#70b163';
+		  		}else{
+		    		btn_sumbit.disabled = true;
+		    		btn_sumbit.style.backgroundColor = '#d7d7d7';
+		  		}
+			});
+			
+			app.listen(btn_sumbit, 'tap', function(el){
+				var sign = $('#signature').val() ? $('#signature').val() :"";
+				if(sign == ""){
+					msg = '请先输入建议的内容！';
+					options = {};
+					options.duration = 2000;
+					options.location = 'bottom';
+					app.toast(msg, options);
+				    return ;
+				}
+				
+				app.ajax('/Member/Update',{ token:token, signature: sign }, function(data){
+					if(data.code == 0){
+						app.tigger('account','update_set',{ 
+			                v:sign,
+			                k:'signature'
+			            });
+						g_mui.back(); 
+					}
+					else{
+						app.tigger('account','update_set',{ 
+			                v:sign,
+			                k:'signature'
+			            });
+						g_mui.back(); 
+					}
+				});
+			});
+			
+		</script>
+	</body>
+
+</html>

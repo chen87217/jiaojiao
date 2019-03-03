@@ -1,0 +1,213 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>个人主页</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script type="text/javascript" src="../../js/mui.min.js" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/app.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css" />
+		<style>
+			#header a{ 
+				margin: 10px 3px;
+			    display: inline-block;
+			    text-align: center;
+			}
+			#header i{ padding:0px 0px; color:rgba(255,255,255,0.8); font-weight: 700;}
+			#header .icon-more-o{
+				-webkit-transform: rotate(-90deg);
+			}
+			.info{ margin-left: 24px;}
+			.face-name{ margin-top: 24px;  height: 80px; line-height: 80px; display: flex;}
+			.face-name span{display: inline-block;}
+			.face-name #avatar{ width:80px;  vertical-align: middle; }
+			.face-name #userName{ font-size: 28px; color:rgba(16, 16, 16, 1); font-weight: 700; padding-top:2px;  }
+			
+			.sign,.credit,.tags{ margin-top: 1.2rem; margin-bottom:0px; font-size:14px; }
+			.info .title{ font-size: 14px; font-weight: 700; color:rgba(0,0,0,1);line-height: 0px;}
+		
+			.mytags{
+		        display: flex-row;
+		        background-color:rgba(0, 0, 0, 0.04);
+		        color:rgba(0, 0, 0, 0.68);
+		        border-radius:2em;
+		        width: auto;
+		        height:auto;
+		        padding-left: 1rem;
+		        padding-right:1rem;
+		        margin-left: 1rem;
+		        line-height: 2rem;
+		        font-size: 13px;
+		    }
+		
+			#send{ right:20px; top:50px;}
+			
+			/*协议弹出层*/
+			#div {
+				width: 80px;
+				height: 0px;
+				background: red;
+				position: fixed;
+				top: 44px;
+				right: 10px ;
+			}
+			
+			#popover{ height:90px; width:80px;}
+			.mui-popover .mui-popover-arrow:after {
+				width: 0px;
+			}
+			#popover ul{ text-align: center;}
+			#popover a{ font-size: 14px; font-weight: 700; }
+			
+		</style>
+		
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-transparent">
+			<a class="mui-action-back  mui-pull-left">
+				<i class="mui-icon icon-circle-left" style="color:rgba(0,0,0,0.2);"></i>
+			</a>
+			<a id="oper" class="mui-pull-right">
+				<i class="mui-icon icon-more-o"></i>
+			</a>
+		</header>
+		<div class="mui-content">
+			<!--静态图片-->
+			<img src="../../image/mybg.png" style="width: 100%;"/>
+			
+			<div class="info local-relative">
+				
+				<img src="../../image/phfj.png" id="send" class="local-absolute">
+				
+				<div class="face-name">
+					<div>
+						<span><img src="../../image/phxh.png" id="avatar"></span>
+					</div>
+					<div>
+						<span id="userName">小花童鞋</span>
+					</div>
+				</div>
+				
+				<div class="sign"><span class="title">签名：</span><span id="signature">书籍是进步的阶梯...</span></div>
+		      	<div class="credit"><span class="title">信用分：</span><span id="credit_score">87</span></div>
+		        <div class="tags" id="tags">
+		        	<span class="title">个人标签:</span>
+		        </div>
+			</div>
+		</div>
+		
+		<div id="div"></div>
+		<div id="popover" class="mui-popover">
+			<ul class="mui-table-view" >
+				<li class="mui-table-view-cell"><a href="#" data-v='s'>赞</a></li>
+				<li class="mui-table-view-cell"><a href="#" data-v='ns'>投诉</a></li>
+			</ul>
+		</div>
+		
+		
+		<script id='msg-template' type="text/template">
+			<% for(var i in record){ var item=record[i]; %>
+				<span class='mytags' data-id="<%=(item.tagId)%>"><%=(item.tagName)%></span>	
+			<% } %>
+		</script>
+		
+		
+		<script type="text/javascript" src="../../js/app.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/arttmpl.js" charset="utf-8"></script>
+		<script type="text/javascript">
+			
+			var default_data =[{
+				tagId: 1,
+				tagName: 'ces1'
+			},{
+				tagId: 2,
+				tagName: 'ces2'
+			},{
+				tagId: 3,
+				tagName: 'ces3'
+			},{
+				tagId: 4,
+				tagName: 'ces4'
+			},{
+				tagId: 5,
+				tagName: 'ces5'
+			},{
+				tagId: 6,
+				tagName: 'ces6'
+			},{
+				tagId: 7,
+				tagName: 'ces7'
+			},{
+				tagId: 8,
+				tagName: 'ces8'
+			},{
+				tagId: 9,
+				tagName: 'ces9'
+			}];
+			var send = document.getElementById('send');
+	        var tags = document.getElementById('tags');
+	        
+	        var oper = document.getElementById('oper');  //弹窗
+	        
+	        app.init({}, false, true, false);
+	        
+	        var datasource = [];  //数据源
+	        g_mui.plusReady(function() {
+				app.ajax('/Member/Tags', { token: token }, function(data){
+					if(data.code == 0){
+						datasource = data.data;
+						dataload(datasource);
+					}else{
+						datasource = default_data;
+						dataload(datasource);
+					}
+				});
+			});
+					
+		    /*单聊*/
+		    app.listen(send, 'tap', function(){
+		   		args = {};
+		   		args.url = '../chat/single.html';
+		   		args.id = 'single';
+		   		app.open(args);
+		    });
+			
+			/*加载数据*/
+			function dataload(data){ 
+				var html = template('msg-template',{ record:data });
+				tags.innerHTML = tags.innerHTML + html;
+			}
+			    
+		    /*弹窗*/
+		    app.listen(oper, 'tap', function(){
+		    	g_mui("#popover").popover('toggle', document.getElementById("div"));
+		    })
+			
+		    
+		    app.bind('#popover .mui-table-view-cell', 'a', 'tap', function(el){
+		    	switch(el.getAttribute('data-v')){
+		    		case 's':
+		    			vote(1);
+		    			break;
+		    		case 'ns':
+		    			vote(-1);
+		    			break;
+		    	}
+		    	g_mui.trigger(oper,'tap');
+		    });
+		    	
+			    
+		    //投票  -1:反对    1:赞
+		    function vote(flag){
+		    	alert(flag);
+		    }
+			    
+	        
+		</script>
+	</body>
+
+</html>

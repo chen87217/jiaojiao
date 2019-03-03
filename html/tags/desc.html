@@ -1,0 +1,325 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>标签信息</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script type="text/javascript" src="../../js/mui.min.js" charset="utf-8"></script>
+		<link rel="stylesheet"  href="../../css/reset.css"  />
+		<link rel="stylesheet"  href="../../css/mui.min.css"  />
+		<link  rel="stylesheet"  href="../../css/app.css"  />
+		<link  rel="stylesheet"  href="../../css/iconfont.css"  />
+		<style>
+			.des{ color: rgba(0, 0, 0, 0.15); font-size:14px; margin-left:1rem;}
+			.mui-content ul{ margin-left: 1rem;}
+			.mui-content ul:first-child{ margin-top: 40px;}
+			
+			.mui-content ul li{ width: 100%; overflow: hidden; margin-bottom: 30px; display: flex; flex-direction: row;}
+			/*.mui-content ul li:after{ clear:both; height: 0px;}
+
+			.mui-content ul li div{ float:left;}*/
+			.mui-content ul li .day{ margin-right:17px; line-height: 32px; }
+			.mui-content ul li .day,.mui-content ul .date{ font-size: 26px; font-weight: 700; font-family: Arial;}
+			.mui-content ul li .month{ font-size: 14px;}
+			
+			.mui-content ul li .content{ margin-right: 1rem; flex:1;}
+			
+			.mui-content ul li .content .plus{ 
+				height: 97px; 
+				width: 97px; 
+				border:1px solid rgba(255, 255, 255, 0); 
+				background-color: rgba(0, 0, 0, 0.03);
+				text-align: center;
+			}
+			
+			.mui-content ul li .content .plus i{ font-size:32px; line-height: 97px; color:rgba(0, 0, 0, 0.15)}
+			
+			.mui-content ul li .content .intro { display: flex; font-size: 14px; color:rgba(16, 16, 16, 1);}
+			
+			.mui-content ul li .content .image-list ul{ display: flex; flex-direction: row; flex-wrap: wrap;  margin-top: 10px; margin-left: 0px;}
+			
+			.mui-content ul li .content .image-list li{ width:84px; height: 84px; margin-bottom:5px;}
+			
+			.mui-content ul li .content .image-list li img{ width:80px; height: 80px;}
+			
+			.mui-content .footer .pubday{ font-size:12px; color:rgba(0, 0, 0, 0.18); margin-right: 10px;}
+			
+			.mui-content .footer span>a{ color:#89A4D2 !important; font-size: 12px; font-family: 'PingFangSC-regular';}
+			
+			
+			.mui-table-view:before,.mui-table-view:after{ background-color: transparent;}  
+			
+		</style>
+		
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-transparent">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<a class="mui-icon mui-icon-trash mui-pull-right" id='delete_tags'></a>
+		</header>
+		<div class='zwf'></div>
+		
+		
+		<div class='title' style='color:rgba(16, 16, 16, 1)'>台球</div>
+		<div class='des'>10年台球经验，爱好者，擅长斯诺克....</div>
+		<div class='mui-content'>
+			<div id="pullrefresh" class="mui-content mui-scroll-wrapper" style="top:44px;">
+				<div class="mui-scroll">
+					<ul class="mui-table-view mui-table-view-chevron">
+						<li id='add'>
+							<div class='day'>今天&ensp;</div>
+							<div id='today'>
+								<div class="content"><div class='plus'><i class='icon-plus-o'></i></div></div>
+							</div>
+						</li>
+					</ul>
+				</div>	
+			</div>	
+		</div>
+		
+		<script id='today-template' type="text/template">
+			<% for(var i in record){ var item=record[i]; %>
+				<div class='content'>
+					<div class='intro'>
+						<%=(item.intro)%>
+					</div>
+					<div class='image-list'>
+						<ul>
+							<% for(var idx in item.images){  %>
+							<li><img src='<%=(item.images[idx])%>'></li>
+							<% }%>
+						</ul>
+						
+					</div>
+					<div class='footer'>
+						<span class='pubday'><%=(item.pubday)%></span>
+						<span><a href='#' data-topic-id='<%=(item.id)%>'>删除</a></span>
+					</div>
+				</div>
+			<% } %>
+		</script>
+		
+		<script id='msg-template' type="text/template">
+			<% for(var i in record){ var item=record[i]; %>
+				<li>
+					<div class='day'>
+						<% if(item.date > 9) {%>
+							<span class='date'><%=(item.date)%></span>
+						<% } else { %>
+							<span class='date'>&ensp;<%=(item.date)%></span>
+						<% } %>
+						
+						<% if(item.month > 9) {%>
+							<span class='month'><%=(item.month)%>月</span>
+						<% } else { %>
+							<span class='month'><%=(item.month)%>月&ensp;</span>
+						<% } %>
+							
+					</div>
+					
+					<div class='content'>
+						<% for(var idx in item.data) { var it=(item.data)[idx]; %>
+						<div class='intro'>
+							<%=(it.intro)%>
+						</div>
+						<div class='image-list'>
+							<ul>
+								<% for(var idx in it.images){  %>
+								<li><img src='<%=(it.images[idx])%>'></li>
+								<% }%>
+							</ul>
+							
+						</div>
+						<div class='footer'>
+							<span class='pubday'><%=(it.pubday)%></span>
+							<span><a href='#' data-topic-id='<%=(it.id)%>'>删除</a></span>
+						</div>
+						<% } %>
+					</div>
+				</li>
+			<% } %>
+		</script>
+		
+		<script type="text/javascript" src="../../js/app.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/jquery.min.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/arttmpl.js"></script>
+		<script type="text/javascript">
+			var delete_tags = document.getElementById('delete_tags');
+			var tag_id;
+			
+			var today = [
+				{
+					intro:'今天新闻',
+					images:['../../image/cam1.png','../../image/cam1.png'],
+					pubday:'上午12：59',
+					id: 1
+				},
+				{
+					intro:'今天上午不好玩',
+					images:['../../image/cam1.png'],
+					pubday:'上午10：59',
+					id: 2
+				}
+			];
+			
+			var data = [
+				{
+					'date':27,
+					month: 6,
+					data: [
+						{
+							intro:'台球发烧友，10年球龄，擅长斯诺克，有机会',
+							images:['../../image/cam1.png','../../image/cam1.png'],
+							pubday:'2018年5月10日  上午10：59',
+							id: 1
+						},
+						{
+							intro:'台球',
+							images:['../../image/cam1.png'],
+							pubday:'2018年6月10日  上午10：59',
+							id: 2
+						}
+					]
+				},{
+					'date':27,
+					month:5,
+					data:[
+						{
+							intro:'1231',
+							images:['../../image/cam1.png','../../image/cam1.png','../../image/cam1.png','../../image/cam1.png'],
+							pubday:'2018年5月1日  上午10：59',
+							id: 2
+						}
+					]
+				}
+			];
+			
+			app.init({
+				gestureConfig:{
+					doubletap: true
+				},
+	          	pullRefresh: {
+					container: '#pullrefresh',
+					up: {
+						auto:true,
+						contentrefresh: '正在加载...',
+						callback: pullupRefresh
+					}
+				}
+	        }, false, true, false);
+			
+			g_mui.plusReady(function() {
+				var self = plus.webview.currentWebview();
+				tag_id = self.tid;
+			});
+			
+			app.listen(document.getElementById('header'), 'doubletap', function(){
+				g_mui('#pullrefresh').pullRefresh().scrollTo(0,0,100);
+			});
+			
+			var curr_page = 0;
+			var limit = 10;
+			function pullupRefresh(){
+				setTimeout(function() {
+					//loadData();
+					
+					mdata();
+				}, 1500);
+			}
+			
+			function loadData(){
+				app.ajax('/tags/GetDesc', {
+					token: token,
+					tag_id: tag_id,
+					page: curr_page,
+					limit: limit
+				}, function(data){
+					if(data.code == 0){
+						g_mui('#pullrefresh').pullRefresh().endPullupToRefresh(false); //参数为true代表没有更多数据了。
+						var html = template('msg-template',{ record:data.data});
+						$('#pullrefresh>ul')[0].innerHTML = $('#pullrefresh>ul')[0].innerHTML + html;
+						++curr_page;
+						mui('#pullrefresh').pullRefresh().refresh(true);
+					}else{
+						mui('#pullrefresh').pullRefresh().endPullupToRefresh(true); //参数为true代表没有更多数据了。
+					}
+				})
+			}
+			
+			function mdata(){
+				g_mui('#pullrefresh').pullRefresh().endPullupToRefresh(curr_page>3); //参数为true代表没有更多数据了。
+				++curr_page;
+				var html = template('msg-template',{ record:data});
+				$('.mui-table-view')[0].innerHTML = $('.mui-table-view')[0].innerHTML + html;
+				
+				
+				var today_html = template('today-template',{ record:today});
+				var t = $('#today').html()+today_html; 
+				$('#today').html(t);
+			}
+			
+			/*添加一个话题*/
+			app.bind('#pullrefresh', '#add .plus', 'tap', function(el){
+				args = {};
+				args.url = 'topic.html';
+				args.id = 'topic';
+				args.extras = {};
+				args.extras.tid = tag_id;
+				app.open(args);
+			});
+				
+			
+			/*删除一个标签*/
+			app.listen(delete_tags, 'tap', function(){
+				jsonData = {};
+				jsonData.buttons = [{title:"确定删除标签",style:"destructive"}];
+				app.actionSheet(jsonData,function(e){
+					var index = e.index;
+					switch (index){
+						case 0:
+							break;
+						case 1:
+							deleteTags(1,tag_id);
+							break;
+					}
+				});
+				
+			});
+			
+			app.bind('#pullrefresh', '.footer a', 'tap', function(el){
+				var topic_id = el.getAttribute('data-topic-id');
+				jsonData = {};
+				jsonData.buttons = [{title:"删除",style:"destructive"}];
+				app.actionSheet(jsonData,function(e){
+					var index = e.index;
+					switch (index){
+						case 0:
+							break;
+						case 1:
+							deleteTags(0,topic_id);
+							break;
+					}
+				});
+			});
+			
+			/*is_tag 0：话题删除：   1：标签删除*/
+			function deleteTags(is_tag, tag_id){
+				url = '';
+				if(is_tag ==  1){
+					url = '/tags/deleteTag';
+				}else{
+					url = '/tags/deleteTopic';
+				}
+				app.ajax(url, { token: token, tid: tag_id }, function(data){
+					if(data.code == 0){
+						//更新数据
+					}
+				});
+			}
+			
+		</script>
+	</body>
+
+</html>

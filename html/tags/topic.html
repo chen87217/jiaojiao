@@ -1,0 +1,167 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script type="text/javascript" src="../../js/mui.min.js" charset="utf-8"></script>
+		<link rel="stylesheet"  href="../../css/reset.css"  />
+		<link rel="stylesheet"  href="../../css/mui.min.css"  />
+		<link  rel="stylesheet"  href="../../css/app.css"  />
+		<link  rel="stylesheet"  href="../../css/iconfont.css"  />
+		<link  rel="stylesheet"  href="../../css/login.css"  />
+		 <style>
+	    	#header a{ line-height: 44px;}
+	    	
+	    	.mui-content .plus{
+	    		height: 80px; 
+				width: 80px; 
+				border:1px solid rgba(255, 255, 255, 0); 
+				background-color: rgba(0, 0, 0, 0.03);
+				text-align: center;
+	    	}
+	    	
+	    	.mui-content { margin-top: 48px; margin-left: 1rem; margin-right: 1rem;}
+	    	
+	    	.mui-content .content textarea{ border: none; padding:0 0; margin-top:20px;}
+	    	.mui-content .plus i{ font-size:32px; line-height: 80px; color:rgba(0, 0, 0, 0.15)}
+	    	
+	    	.image-list ul{ display: flex; flex-direction: row; flex-wrap: wrap;  margin-top: 10px; margin-left: 0px;}
+	    	
+	    	.image-list li{ width:84px; height: 84px; margin-bottom:5px;}
+	    	
+	    	.image-list li img{ width:80px; height: 80px;}
+	    	
+	    	#popover{
+	    		height:120px; 
+	    		width:120px; 
+	    		background-color: transparent; 
+	    		border: 0px; 
+	    		box-shadow: none;
+	    	}
+	    	#popover .check{
+	    		width: 80px; 
+	    		height: 80px;
+	    		margin: auto; 
+	    		text-align: center;
+	    		border-radius: 50%; 
+	    		background-color: #fff;
+	    		margin-bottom: 20px;
+	    	}
+	    	
+	    </style>
+		
+	</head>
+
+	<body>
+		
+		<header id="header" class="mui-bar mui-bar-transparent">
+			<a class="mui-action-back mui-pull-left" style="color:#000000; font-size: 16px;">取消</a>
+			<a class="mui-pull-right" id='add_topic' style="color:rgba(37, 155, 36, 0.31); font-size: 16px;font-weight: 700;" >发布</a>
+		</header>
+		
+		<div class='mui-content'>
+			<div class='content'>
+				<textarea placeholder="想说的" class='my-placehoder' autofocus="" rows="5"></textarea>
+			</div>
+			
+			<div class='image-list'>
+				<ul>
+					<li id="add">
+						<div class='plus'>
+							<i class='icon-plus-o'></i>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		
+		<div id="div" style="top:60%; border:0; "></div>
+		<div id="popover" class="mui-popover">
+			<div class="check">
+				<i class="mui-icon mui-icon-checkmarkempty" style="font-size:80px; color:#666"></i>
+			</div>
+			<div style="color: #fff; text-align: center;">已发送</div>
+		</div>
+			
+		
+		<script type="text/javascript" src="../../js/app.js" charset="utf-8"></script>
+		<script type="text/javascript">
+			var add_topic = document.getElementById('add_topic');
+	        var add = document.getElementById('add');
+	        var images_list = document.body.querySelector('.image-list ul');
+	        
+	        var tag_id = '';
+			app.init({}, false, true, false);
+			
+			g_mui.plusReady(function() {
+				var self = plus.webview.currentWebview();
+				tag_id = self.tid;
+			});
+			
+			//发布
+			app.listen(window.document, 'pop', function(){
+				g_mui("#popover").popover('toggle', document.getElementById("div"));
+			});
+			
+			app.listen(add_topic, 'tap', function(){
+				app.ajax('/tag/addTopic',{}, function(data){
+					if(data.code == 0){
+						g_mui.trigger(window.document, 'pop');
+				
+						setTimeout(function(){
+							g_mui.trigger(window.document, 'pop');
+							// todo 触发列表数据更新
+							
+							
+							g_mui.back();
+						}, 1000);
+					}
+				});
+				
+				
+			});
+			
+			//照片
+			app.listen(add, 'tap', function(){
+				jsonData = {};
+				jsonData.title = '选择照片';
+				jsonData.buttons = [{title:"拍照"},{title:"手机相册"}];
+				
+				app.actionSheet(jsonData, function(e){
+					var index = e.index;
+					switch (index){
+						case 0:
+							break;
+						case 1:
+							app.camera(function(img_path,img_name){
+								var li = document.createElement('li');
+								li.innerHTML = "<img src='"+img_path+"'>";
+				    			images_list.insertBefore(li, images_list.firstChild);
+							}, function(msg){
+								
+							});
+							break;
+						case 2:
+							app.galleryImgs(function(path){
+								for(var i in path){
+									var li = document.createElement('li');
+									li.innerHTML = "<img src='"+ path[i]+"'>";
+						    		images_list.insertBefore(li, images_list.firstChild);
+								}
+							}, function(msg){
+								
+							}, 5);
+							break;
+					}
+					
+				});
+			})
+			
+			
+			
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,450 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>单聊</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script type="text/javascript" src="../../js/mui.min.js" charset="utf-8"></script>
+		<link rel="stylesheet"  href="../../css/mui.min.css" />
+		<link  rel="stylesheet"  href="../../css/app.css"  />
+		<link  rel="stylesheet"  href="../../css/iconfont.css"  />
+		<link rel="stylesheet" type="text/css" href="../../css/chat.css" />
+		<style>
+			.relation{ text-align: center; margin-top: 15px;}
+			.relation div{ padding:5px 10px; border-radius: 25rem; font-size:13px; color:rgba(255, 255, 255, 1); background: rgba(0, 0, 0, 0.08);}
+			.relation .t{ display: inline-block;}
+			.relation .same_tags{ width:80%; margin:10px auto; }
+			
+			
+			/*协议弹出层*/
+			#div {
+				width: 80px;
+				height: 0px;
+				background: red;
+				position: fixed;
+				top: 44px;
+				right: 10px ;
+			}
+			
+			#popover{ height:120px; width:80px;}
+			.mui-table-view{ background-color:rgba(139, 195, 74, 1) !important; }
+			.mui-table-view-cell:after{ left: 0px;}
+			.mui-popover .mui-popover-arrow:after {
+				width: 0px;
+			}
+			#popover ul{ text-align: center; }
+			#popover a{ color:#FFFFFF; font-size: 14px; font-weight: 700; }
+			
+			
+			
+			/*表情包*/
+			#div-face {
+				width: 90%;
+				height: 0px;
+				background: red;
+				position: fixed;
+				bottom: 40px;
+				left: 5% ;
+				margin:auto auto;
+			}
+			
+			#popover-face{ height:240px; width:90%;}
+			
+			
+			/*标题详情*/
+			.intro{ display: flex; padding:10px;}
+			.author-face { padding-right:10px;}
+			.desc { flex:1;}
+			.desc .author-name{ font-size: 12px;}
+			.desc .author-what{ display: inline-block; padding:0px 5px; font-size: 12px; color:#ffffff; background-color: rgba(195, 172, 137, 1); border-radius: 2em;}
+			.desc .desc-info{ margin-top:10px;}
+			.desc .desc-info .desc-text{ font-size: 13px; color: .rgba(16, 16, 16, 1);}
+			.desc .desc-info .desc-image ul{ list-style: none; padding-left:0px;}
+			
+			
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"><span style="font-size:18px;">16</span></a>
+			<h1 class="mui-title"><span id="tname"></span></h1>
+			<a class="mui-icon mui-icon-more mui-pull-right" id="oper"></a>
+		</header>
+		<pre id='h'>
+		</pre>
+		<script id='msg-template' type="text/template">
+			<% for(var i in record){ var item=record[i]; %>
+				<div class="msg-item <%= (item.sender=='self'?' msg-item-self':'') %>" msg-type='<%=(item.type)%>' msg-content='<%=(item.content)%>'>
+					<% if(item.sender=='self' ) { %>
+						<img class="msg-user myface" src="../../image/logo.png" alt=""  data-id=''/>
+					<% } else { %>
+						<img class="msg-user-img myface" src="../../image/logo.png" alt="" data-id='<%=(item.uid)%>'/>
+					<% } %>
+					<div class="msg-content">
+						<% if(item.sender!='self' ) { %><div>余先生</div><%}%>
+						<div class="msg-content-inner">
+							<% if(item.type=='text' ) { %>
+								<%=( item.content || '&nbsp;&nbsp;') %>
+							<% } else if(item.type=='image' ) { %>
+								<img class="msg-content-image" src="<%=(item.content)%>" style="max-width: 100px;" />
+							<% } %>
+						</div>
+						<div class="msg-content-arrow"></div>
+					</div>
+					<div class="mui-item-clear"></div>
+				</div>
+			<% } %>
+		</script>
+			
+		<div class="mui-content" >
+			<!--关系-->
+			<div class="relation">
+				<div class="t">18：41</div>
+				<div class="same_tags">他和你有3个相同标签：中国，女，台球</div>
+			</div>	
+			
+				
+			
+			<div id='msg-list'>
+				
+			</div>
+		</div>
+		<footer>
+			<div class="footer-center">
+				<textarea id='msg-text' type="text" class='input-text'></textarea>
+			</div>
+			<label for="" class="footer-right" style="display: flex;right:20px;" >
+				<i id='msg-face' class="icon-emoticon" style="font-size: 24px; margin-right: 5px; margin-top: 5px;color: rgba(0, 0, 0, 0.25);"></i>
+				<i id='msg-camera' class="icon-control_point" style="font-size: 24px;margin-top: 5px;color: rgba(0, 0, 0, 0.25);"></i>
+				<i id="ssend" class="mui-icon-paperplane" style="display: none;"></i>
+			</label>
+		</footer>
+		
+		<!--弹窗-->
+		<div id="div"></div>
+		<div id="popover" class="mui-popover">
+			<ul class="mui-table-view" >
+				<li class="mui-table-view-cell"><a href="#" data-v='1'>赞</a></li>
+				<li class="mui-table-view-cell"><a href="#" data-v='2'>投诉</a></li>
+				<li class="mui-table-view-cell"><a href="#" data-v='4'>退出</a></li>
+			</ul>
+		</div>
+		
+		
+		<!--表情包-->
+		<div id="div-face"></div>
+		<div id="popover-face" class="mui-popover">
+			
+		</div>
+		<script id='face-template' type="text/template">
+			<% for(var i in faces){ var item=faces[i]; %>
+				<img width="20" src="../../image/emotion/<%=(item.name)%>.png" alt="<%=(item.text)%>"/>
+			<% } %>
+		</script>
+		
+		<script type="text/javascript" src="../../js/app.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/jquery.min.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/arttmpl.js" charset="utf-8"></script>
+		<script type="text/javascript">
+			
+			var oper= document.getElementById('oper');  //弹出层
+			
+			var title =document.getElementById('tname'); //标题
+			var body =document.querySelector('body'); 
+			var footer =document.querySelector('footer'); 
+			var btnFace =document.getElementById('msg-face'); //小头贴
+			var btnCamera =document.getElementById('msg-camera'); //拍照、相册
+			var boxMsgText =document.getElementById('msg-text'); //输入框
+			var areaMsgList = document.getElementById('msg-list'); 	
+			var h = document.getElementById('h'); 
+			var content = document.querySelector('.mui-content'); 
+			var ssend = document.getElementById('ssend');  //消息发送按钮
+			
+			var MIN_SOUND_TIME = 800;
+			template.config('escape', false);
+			
+			app.init({
+				gestureConfig: {
+					tap: true, //默认为true
+					doubletap: true, //默认为false
+					longtap: true, //默认为false
+					swipe: true, //默认为true
+					drag: true, //默认为true
+					hold: true, //默认为false，不监听
+					release: true //默认为false，不监听
+				}
+			}, false, true, false);
+			
+			if(g_mui.os.ios){
+				// 解决在ios上fixed元素focusin时位置出现错误的问题 
+				document.addEventListener('DOMContentLoaded',function(){
+					document.addEventListener('focusin', function() {
+						footer.style.position = 'absolute';
+					});
+					document.addEventListener('focusout', function() {
+						footer.style.position = 'fixed';
+					});
+				});
+			}
+			
+			g_mui.plusReady(function(){
+				
+			    plus.webview.currentWebview().setStyle({
+					softinputMode: "adjustResize"
+				});
+				
+				var showKeyboard = function() {
+					if (g_mui.os.ios) {
+						var webView = plus.webview.currentWebview().nativeInstanceObject();
+						webView.plusCallMethod({
+							"setKeyboardDisplayRequiresUserAction": false
+						});
+					} else {
+						var Context = plus.android.importClass("android.content.Context");
+						var InputMethodManager = plus.android.importClass("android.view.inputmethod.InputMethodManager");
+						var main = plus.android.runtimeMainActivity();
+						var imm = main.getSystemService(Context.INPUT_METHOD_SERVICE);
+						imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
+						//var view = ((ViewGroup)main.findViewById(android.R.id.content)).getChildAt(0);
+						imm.showSoftInput(main.getWindow().getDecorView(), InputMethodManager.SHOW_IMPLICIT);
+						
+					}
+				};
+				
+				h.style.width = boxMsgText.offsetWidth + 'px';
+				var footerPadding = footer.offsetHeight - boxMsgText.offsetHeight;
+				
+				
+				function msgTextFocus() {
+					boxMsgText.focus();
+					setTimeout(function() {
+						boxMsgText.focus();
+					}, 150);
+					boxMsgText.selectionStart = boxMsgText.selectionEnd =  boxMsgText.value.length;  //设置光标位置
+				}
+				//解决长按“发送”按钮，导致键盘关闭的问题；
+				app.listen(ssend, 'touchstart', function(){
+					msgTextFocus();
+				});
+				
+				//解决长按“发送”按钮，导致键盘关闭的问题；
+				app.listen(ssend, 'touchmove', function(){
+					msgTextFocus();
+				});
+				
+				app.listen(ssend, 'tap', function(e){
+					msgTextFocus();
+					send({
+						sender: 'self',
+						type: 'text',
+						uid: '1',
+						content: transEmo(boxMsgText.value.replace(new RegExp('\n', 'gm'), '<br/>'))
+					});
+					boxMsgText.value = '';
+					g_mui.trigger(boxMsgText, 'input', null);
+				});
+				
+				
+				var record = [{
+					sender: 'd',
+					type: 'text',
+					uid: '1',
+					content: 'fsfas'
+				}];
+				
+				var bindMsgList = function() {
+					//绑定数据:
+					areaMsgList.innerHTML = template('msg-template', {
+						"record": record
+					});
+					var msgItems = areaMsgList.querySelectorAll('.msg-item');
+					
+					areaMsgList.scrollTop = areaMsgList.scrollHeight + areaMsgList.offsetHeight;
+				}
+				bindMsgList();
+				window.addEventListener('resize', function() {
+					areaMsgList.scrollTop = areaMsgList.scrollHeight + areaMsgList.offsetHeight;
+				}, false);
+				
+				
+				var send = function(msg) {
+					record.push(msg);
+					bindMsgList();
+					toRobot(msg.content);
+				};
+				
+				var toRobot = function(info) {
+						//消息处理地方
+						touser = 12;
+						var json = {
+							data:{
+			    				icon: '../../image/logo.png',
+								count: 10,
+								content: info,
+								pubtime: '2018-9-19',
+			                    uuid: uuid,
+								token: token,
+								to: touser
+							}
+		    			}
+						
+						app.tigger('main', 'wss', json);
+				};
+				
+				app.listen(btnCamera, 'tap', function(){
+					jsonData = {};
+					jsonData.title = '选择照片';
+					jsonData.buttons = [{title:"拍照"},{title:"手机相册"}];
+					app.actionSheet(jsonData, function(e){
+						var index = e.index;
+						
+						switch (index){
+							case 0:
+								break;
+							case 1:
+								app.camera(function(img_path,img_name){
+									send({
+										sender: 'self',
+										type: 'image',
+										content: img_path
+									});
+								}, function(msg){
+									
+								});
+								break;
+							case 2:
+//								app.galleryImgs(function(path){
+//									imgs = path;
+//									send({
+//										sender: 'self',
+//										type: 'image',
+//										content: imgs
+//									});
+//								}, function(msg){
+//									
+//								}, 5);
+								app.album(function(path){
+									send({
+										sender: 'self',
+										type: 'image',
+										content: path
+									});
+								}, function(msg){
+									
+								}, false);	
+								break;
+						}
+					});
+				});
+				app.listen(boxMsgText, 'input', function(){
+					if(boxMsgText.value.length > 0){
+						btnFace.style.display = 'none';
+						btnCamera.style.display = 'none';
+						ssend.style.display = 'block';
+					}else{
+						btnFace.style.display = 'block';
+						btnCamera.style.display = 'block';
+						ssend.style.display = 'none';
+						
+					}
+					h.innerText = boxMsgText.value.replace(new RegExp('\n', 'gm'), '\n-') || '-';
+					
+					footer.style.height = (h.offsetHeight + footerPadding) + 'px';
+					content.style.paddingBottom = footer.style.height;
+				});
+				
+				var focus = false;
+				boxMsgText.addEventListener('tap', function(e){
+					msgTextFocus();
+					focus = true;
+					setTimeout(function () {
+						focus = false;
+					},1000);
+					e.detail.gesture.preventDefault();
+				}, false);   
+				
+				//点击消息列表，关闭键盘
+				app.listen(areaMsgList, 'click', function(){
+					if(!focus){
+						boxMsgText.blur();
+					}
+				});
+				
+			    
+			    /*表情包*/
+			    var popover_face = document.getElementById("popover-face");
+			    var faces ;
+			    $.getJSON('../../image/emotion/emotion.json',function(data){
+			    	faces = data;
+				});
+				btnFace.addEventListener('tap',function(){
+					mui("#popover-face").popover('toggle', document.getElementById("div-face"));
+					var html = template('face-template',{ faces:faces });
+					popover_face.innerHTML = html;
+				});
+				
+				mui("#popover-face").on('tap','img',function(){
+					var send_msg = this.getAttribute('alt');
+					boxMsgText.value = boxMsgText.value + send_msg;
+					msgTextFocus();
+					mui.trigger(boxMsgText,'input')
+					mui.trigger(btnFace, 'tap');
+				})
+				
+				//文字表情转换
+			   function transEmo(emoMsg){
+			      	var emoPath, transMsg;
+			      	var reg = /\[(.*?)\]/gm;
+			      	transMsg = emoMsg.replace(reg, function(match) {
+			          	for (var i = 0, len = faces.length; i < len; i++) {
+		                  	if (faces[i].text === match) {
+		                        emoPath = '../../image/emotion/' + faces[i].name + '.png';
+		                        return '<img width="20" src="' + emoPath + '" />';
+		                  	}
+			          	}	
+			          	return match;
+			      	});
+			      	return transMsg;
+			   	}
+			   
+			});
+			
+			/*弹窗*/
+			app.listen(oper, 'tap', function(){
+				g_mui("#popover").popover('toggle', document.getElementById("div"));
+			});
+			
+			app.bind('#popover .mui-table-view-cell', 'a', 'tap', function(el){
+				switch(el.getAttribute('data-v')){
+		    		case '1':
+		    			vote(1);
+		    			break;
+		    		case '2':
+		    			vote(2);
+		    			break;
+		    	}
+		    	g_mui.trigger(oper,'tap');
+			});
+			
+			/*跳转到个人主页*/
+		   	app.bind('#msg-list', 'img.myface', 'tap', function(el){
+		   		var uid = el.getAttribute('data-id'); 
+		   		args = {};
+		   		args.url="../member/homepage.html";
+		   		args.id =  'homepage';
+		   		args.extras = {  uid: uid };
+		   		app.open(args);
+		   	});
+			    
+			
+		    //投票    1:赞   2:反对   3:退出
+		    function vote(flag){
+		    	alert(flag);
+		    }
+			
+		</script>
+	</body>
+
+</html>

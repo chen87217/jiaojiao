@@ -1,0 +1,264 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>用户注册</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script type="text/javascript" src="../../js/mui.min.js" charset="utf-8"></script>
+		<link rel="stylesheet"  href="../../css/mui.min.css"  />
+		<link rel="stylesheet"  href="../../css/app.css"  />
+		<link rel="stylesheet"  href="../../css/login.css"  />
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-transparent">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		</header>
+		<div class='zwf'></div>
+		<div class='title'>注册</div>
+		
+		<form>
+			<div class="mui-input-row local-relative">
+				<input type="text" class="my-placehoder" placeholder="手机号" id="mobile">
+				<button id="defaultyzm" type="button" class="button local-absolute">获取验证码</button>
+			</div>
+			<div class="mui-input-row">
+				<input type="text" class="my-placehoder" placeholder="验证码" id="code">
+			</div>
+			<div class="loginbutton">
+				<button type="button" id="zhuce" data-loading-text="&nbsp;"  data-loading-icon="mui-spinner mui-spinner-custom">注册</button>
+			</div>
+		</form>
+		
+		<script type="text/javascript" src="../../js/app.js" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			app.init({}, true, false, false);
+			
+			var regYzm = 0;  //获取验证码状态
+			var btn_chk;  //获取验证码按钮
+			var btn_sumbit;  //登录按钮
+			var phone; //手机号
+			var code;  //验证码
+			 
+			var curr_phone_status = 0;  //当前手机号状态  0：注册页面     1：注册标签页面   2:登陆页面
+			
+			function Ready(){
+				btn_chk = document.getElementById('defaultyzm'); 
+				btn_sumbit = document.getElementById('zhuce');  
+				phone = document.getElementById('mobile'); 
+				code = document.getElementById('code');  
+				
+				phone.value = zmobile;
+				regYzm = window.localStorage.getItem('regYzm') ? window.localStorage.getItem('regYzm') : 0; // 是否获取验证码验证( // 是否获取验证码验证(后期再使用)
+				
+			}
+			
+			/*初始化按钮*/
+			function setInit(){
+				if(app.chk(phone.value)){
+					btn_chk.style.backgroundColor="green";
+					btn_sumbit.style.backgroundColor="#d7d7d7";
+				}else{
+				    btn_chk.style.backgroundColor="#d7d7d7";
+				    btn_sumbit.style.backgroundColor="#d7d7d7";
+				}
+			}
+			
+			Ready();
+			setInit();
+			
+			/* 检测手机号是否合法  */
+			app.listen(phone, 'input', function(e){
+				/*只能输入数字*/
+				phone.value=phone.value.replace(/[^0-9-]+/,'');
+				if(phone.value.length>11){
+					phone.value = phone.value.substring(0, 11);
+				}
+		  		setInit();
+			});
+			
+			
+			/*输完手机号 回车*/
+			app.listen(phone, 'keyup',function(e){
+				e = event || window.event;
+				if(e.keyCode == 13){
+					if(!app.chk(phone.value)){
+						//弹出错误信息
+					}else{
+						g_mui.trigger(defaultyzm,'touchstart');
+					}
+				}
+			});
+			
+			
+			var wait = 60;  // 60s获取一次验证码
+			var InterValObj; //定时器
+			var count = wait; //间隔函数，1秒执行
+			var curCount; //当前剩余秒数
+			var is_receive = false;  //是否正在接收短信
+			
+			/* 验证码按钮触摸事件 */
+			app.listen(btn_chk,'touchstart',function(){
+				if(!app.chk(phone.value)){
+					msg = '请输入正确的手机号'
+					options = {};
+					options.verticalAlign = 'middle';
+					app.toast(msg, options);
+					return;
+				}
+				
+				
+				btn_chk.style.backgroundColor="#d7d7d7";
+				if(is_receive == false){ 
+					phone.readOnly=true;
+				    curCount = count;
+					InterValObj = window.setInterval(SetRemainTimes, 1000);  //倒计时
+				}
+				
+				url = '/Api/Member/GetMember';
+       			app.ajax(url, {mobile:mb}, function(data){
+       				member_info = data.data;  
+       				msg = '';  //显示消息 
+       				if(data.code != 0){
+						curr_phone_status = 0;
+					}else{
+						curr_phone_status = member_info.step;
+					}
+					
+       				if(curr_phone_status != 0){ 
+						reg_dialog();
+						return;
+					}else{
+						btn_chk.style.backgroundColor="#d7d7d7";
+						if(is_receive == false){ 
+							is_receive = true;
+						    sendMobile(); //发送验证码
+					    }
+					   
+					}
+       			});
+			});
+			
+			
+			//倒计时
+			function SetRemainTimes() {
+			  	if(curCount == 0) {
+			    	is_receive = false;
+				    window.clearInterval(InterValObj); //停止计时器
+				    phone.readOnly=false;
+				    btn_chk.style.backgroundColor="green";
+				    defaultyzm.innerText = "重新发送";
+				} else {
+				    curCount--;
+				    defaultyzm.innerText = curCount + "秒重新发送";
+				}
+			}
+		
+			/* 发送验证码  */
+			function sendMobile() {
+				window.localStorage.setItem('zmobile', phone.value);
+				app.ajax('/Member/SendVerify', { mobile: phone.value }, function(yzm_result){
+					if( yzm_result.code != 0){
+						var msg = '获取验证码失败';
+						var options = {};
+						options.verticalAlign = 'middle';
+						app.toast(msg, options);
+						curCount = 0;
+					}else{
+						//成功发送验证码成功  设置 regYzm = 1;  登录不成功可一直保留
+						regYzm = 1;
+					}
+				});
+			}
+		
+			//是完善注册信息 还是登录
+			function reg_dialog(){
+				args = {};
+				btnArray = ['否', '是'];
+				if(curr_phone_status == 1){
+					g_mui.confirm('该手机已注册,是否完善注册信息', '注册提醒', btnArray, function(e) {
+						if (e.index == 1) {
+							window.localStorage.setItem('zmobile', phone.value);
+							args.url = "./regtag.html";
+							args.id = "regtag";
+						} 
+					});
+				}else{
+					g_mui.confirm('该手机已注册,是否登陆', '注册提醒', btnArray, function(e) {
+						if (e.index == 1) {
+							window.localStorage.setItem('lmobile', phone.value);
+							args.url = "./login.html";
+							args.id = "login";
+						} 
+					});
+				}
+				app.open(args);
+			}
+			
+			
+			app.listen(code, 'input', function(){
+				/*只能输入数字*/
+				code.value=code.value.replace(/[^0-9-]+/,'');
+				if(code.value.length>0){
+					btn_sumbit.style.backgroundColor="green";
+				}else{
+					btn_sumbit.style.backgroundColor="#d7d7d7";
+				}
+			});
+			
+			app.listen(btn_sumbit, 'tap', function(){
+				
+				g_mui(btn_sumbit).button('loading');
+				
+				setTimeout(function() {
+		            g_mui(btn_sumbit).button('reset');
+		        }.bind(btn_sumbit), 3000);
+				
+				if(!app.chk(phone.value)){
+					msg = '请输入正确的手机号';
+					options = {};
+					options.verticalAlign = 'middle';
+					app.toast(msg, options);
+					return;
+				}
+				
+				if(regYzm != 1 || code.value.trim() == '') {
+					msg = '验证码不正确';
+					options = {};
+					options.verticalAlign = 'middle';
+					app.toast(msg, options);
+					return;
+				}
+				
+				if(curr_phone_status != 0){
+					reg_dialog();
+					return;
+				}
+				
+				is_receive = false;
+				curCount = 0;
+				
+				app.ajax('/Member/Regedit',{
+						mobile:phone.value,
+		                verifyCode:code.value
+				},function(data){
+					if(data.code == 0){
+						window.localStorage.setItem('zmobile', phone.value);
+						window.localStorage.setItem('mb', phone.value);
+						window.localStorage.setItem('step', 1);
+						args = {};
+						args.url = 'regtag.html';
+						args.id = 'regtag';
+						args.show = {};
+						args.show.aniShow = 'slide-in-bottom';
+						app.open(args);
+					}else{
+						
+					}
+				});
+			});
+		</script>
+	</body>
+
+</html>

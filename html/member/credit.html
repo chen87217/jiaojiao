@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>信用分</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script type="text/javascript" src="../../js/mui.min.js" charset="utf-8"></script>
+		<link rel="stylesheet"  href="../../css/mui.min.css"  />
+		<link  rel="stylesheet"  href="../../css/app.css"  />
+		<link  rel="stylesheet"  href="../../css/iconfont.css"  />
+		
+		<style type="text/css">
+			.my-content{  
+				display: flex; 
+				justify-content:center;
+        		align-items: center;
+        		flex-direction:column;
+        		padding-top: 40%;
+        	}
+        	
+        	#score{ font-size: 120px;  font-weight: bold;  font-style:oblique; }
+        	.test{
+	          	margin-top:3rem;
+	          	padding-left: 25px;
+	          	font-size: 12px;
+		    }
+		    .test i{
+		    	left:0px;
+		    	bottom: 1px;
+	          	font-size: 18px;
+		    }
+		    .edu{
+	          	padding-top: 1.5rem;
+	          	font-size: 14px;
+	     	}
+	      	.footer{
+	      		position: fixed;
+	      		bottom: 40px;
+	      		left: 0px;
+	          	width: 100%;
+	          	margin: auto auto;
+	          	font-size:11px;
+	          	color:#b9b9b9;
+	          	text-align: center;
+	     	}
+	     	.yue{
+	       		font-size: 14px;
+	     	}
+		</style>
+		
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-transparent">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		</header>
+		<div class='zwf'></div>
+		
+		<div class="mui-content my-content">
+			<div class='level1' id="score"></div>
+		  	<div class="test level1 local-relative">
+		  		<i class="icon-credit_card local-absolute"></i>
+		  		<span id='remark'></span>
+		  	</div>
+		  	<div class="edu">今日额度：<em id='edu'></em>人/次</div>
+		  	<div class="yue">今日余额：<em id="number"></em>人/次</div>
+		  	
+		</div>
+		<div class="footer">
+			信用分决定发送额度，可信度<br/>越活跃，获赞越多，信用分越高，被投诉则会下降
+		</div>
+        	
+		<script type="text/javascript" src="../../js/app.js" charset="utf-8"></script>
+		<script type="text/javascript">
+			app.init({}, false, true, false);
+			
+			g_mui.plusReady(function(){
+				plus.nativeUI.showWaiting();
+				
+				if(window.localStorage.getItem('credit') == undefined){
+					initData();
+	        	}else{
+					loadData();
+	        	}
+			}); 
+			
+			var default_data = { "score": 60, "edu": 200, "number": 188, "remark": '信用记录良好'};
+				
+			function initData(){
+        		app.ajax('/Member/CreditScore', {token: token}, function(data){
+		        	if(data.code == 0){
+		        		window.localStorage.setItem('credit',JSON.stringify(data.data));
+					}else{
+						window.localStorage.setItem('credit',JSON.stringify(default_data));
+					}
+					loadData();
+				});		
+			}
+			
+			function loadData(){
+				var temp = JSON.parse(window.localStorage.getItem('credit'));
+				document.getElementById('score').innerHTML = temp.score;
+				document.getElementById('edu').innerHTML = temp.edu;
+				document.getElementById('number').innerHTML = temp.number;
+				document.getElementById('remark').innerHTML = temp.remark;
+				
+				app.closeWait();
+			}
+			
+		</script>
+	</body>
+
+</html>

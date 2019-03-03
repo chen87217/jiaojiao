@@ -1,0 +1,164 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>我的标签</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script type="text/javascript" src="../../js/mui.min.js" charset="utf-8"></script>
+		<link rel="stylesheet"  href="../../css/mui.min.css"  />
+		<link  rel="stylesheet"  href="../../css/app.css"  />
+		<link  rel="stylesheet"  href="../../css/iconfont.css"  />
+		<style>
+			#moban{ width:80%;  margin-right: 20%; overflow-x: hidden;}
+			
+			.mytags{
+		        display: flex-row;
+		        display: -webkit-flex-row;
+		        background-color:black;
+		        color:white;
+		        border-radius:2em;
+		        width: auto;
+		        height:auto;
+		        float: left;
+		        padding-left: 1.25rem;
+		        padding-right:1.25rem;
+		        margin-left: 1rem;
+		        margin-top: 1rem;
+		        font-size: 13px;
+		    }
+			
+			.addtags{
+		        width: auto;
+		        height:24px;
+		        padding-left: 1.25rem;
+		        padding-right:1.25rem;
+		        margin-left: 1rem;
+		        margin-top: 2rem;
+		        float: left;
+		        border-radius:2em;
+		        background-color:rgba(36,154,33,1);
+		        color:white;
+		        
+		    }
+			
+			.addtags i{ display: block; margin-right:5px;font-size: 18px; line-height: 24px; height: 18px; float: left;}
+			.addtags span{ display: block; font-size: 12px; line-height: 24px; height: 12px; float:left;}
+			.addtags:active{
+        		background-color:rgba(36,154,33,0.6);
+      		}
+		</style>
+		
+	</head>
+
+	<body>
+		
+		<header id="header" class="mui-bar mui-bar-transparent">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		</header>
+		<div class='zwf'></div>
+		<div class='title'>我的标签</div>
+		
+		<div class="mui-content">
+			<div id='moban'></div>
+		    
+		    <div style="width:100%;clear:both;">
+	       	 	<div class="addtags" id="addtags"><i class="icon-plus"></i><span>添加标签</span></div>
+	      	</div>
+		    <div class="clearfix"></div>
+		</div>
+		
+		<script id='msg-template' type="text/template">
+			<% for(var i in record){ var item=record[i]; %>
+				<div class="mytags" data-id="<%=(item.tagId)%>"><%=(item.tagName)%></div>	
+			<% } %>
+		</script>
+		
+		<script type="text/javascript" src="../../js/app.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/arttmpl.js"></script>
+		<script type="text/javascript">
+			
+			var addtags = document.getElementById('addtags');
+	        var moban = document.getElementById('moban');
+			
+			var default_data = [{
+				tagId: 1,
+				tagName: 'ces1'
+			},{
+				tagId: 2,
+				tagName: 'ces2'
+			},{
+				tagId: 3,
+				tagName: 'ces3'
+			},{
+				tagId: 4,
+				tagName: 'ces4'
+			},{
+				tagId: 5,
+				tagName: 'ces5'
+			},{
+				tagId: 6,
+				tagName: 'ces6'
+			},{
+				tagId: 7,
+				tagName: 'ces7'
+			},{
+				tagId: 8,
+				tagName: 'ces8'
+			},{
+				tagId: 9,
+				tagName: 'ces9'
+			}];
+			
+			app.init({}, false, true, false);
+			
+			g_mui.plusReady(function(){
+				var datasource = [];  //数据源
+				
+				plus.nativeUI.showWaiting();
+				
+				if(window.localStorage.getItem('mytags') == undefined){
+					initData();
+				}else{
+					loadData(JSON.parse(window.localStorage.getItem('mytags')));
+				}
+			});
+			
+			function initData(){
+				app.ajax('/Member/Tags', {  token: token }, function(data){
+					if(data.code == 0){
+						datasource = data.data;
+					}else{
+						datasource = default_data;
+					}
+					window.localStorage.setItem('mytags', JSON.stringify(datasource));
+					loadData(datasource);
+				}, 'get');
+			}
+			
+			function loadData(data){
+				var html = template('msg-template',{ record:data });
+				moban.innerHTML = html;
+				app.closeWait();
+			}
+			
+			app.bind('#moban', 'div', 'tap', function(el){
+				var curr_id = el.getAttribute('data-id');
+				args = {};
+				args.url = 'desc.html';
+				args.id = 'desc';
+				args.extras = {};
+				args.extras.tid = curr_id;
+				app.open(args);
+			});
+			
+			app.listen(addtags, 'tap', function(){
+				args = {};
+				args.url = "addTags.html";
+				args.id = 'addTags';
+				app.open(args);
+			});
+		</script>
+	</body>
+
+</html>

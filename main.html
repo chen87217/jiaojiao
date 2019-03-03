@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script type="text/javascript" src="js/mui.min.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="css/mui.min.css"  />
+		<link rel="stylesheet" href="css/iconfont.css"  />
+		
+		<style type="text/css">
+	    	.mui-bar-tab{ height: 54px;}
+	    	.mui-bar-tab .mui-tab-item.mui-active{ color: rgba(0, 180, 0, 1) !important;}
+	    	.mui-bar-tab .mui-tab-item{ color:rgba(0, 0, 0, 0.25)}
+	    	.mui-tab-label{ font-size: 9px;display: block;}
+	    </style>
+		
+	</head> 
+
+	<body>
+		
+		<nav class="mui-bar mui-bar-tab">
+            <a href="./html/chat/lists.html" class="mui-tab-item mui-active">
+                <span class="mui-icon icon-comment" ></span>
+                <span class="mui-tab-label" >群聊</span>
+            </a>
+            <a href="./html/tags/search.html" class="mui-tab-item">
+                <span class="mui-icon icon-globe" ></span>
+                <span class="mui-tab-label">找人</span>
+            </a>
+            <a  href="./html/member/mine.html" class="mui-tab-item">
+                <span class="mui-icon icon-person" ></span>
+                <span class="mui-tab-label">我</span>
+            </a>
+        </nav>
+		 
+		<script type="text/javascript" src="js/app.js" charset="utf-8"></script>
+		<script type="text/javascript">
+			
+			var subpages=[
+			    './html/chat/lists.html',
+			    './html/tags/search.html',
+			    './html/member/mine.html'
+			];
+			
+			var subpage_style = {
+		        top: '0px',
+		        bottom: '54px',
+		        bounce:"vertical",
+		        scrollIndicator: "none", //隐藏滚动条
+		        autoShow:false 
+		    };
+			var activeTab = subpages[0];
+			
+			
+			app.init({}, true, true, false);
+			Ready();
+			
+			function Ready(){
+				app.subpages(subpages, subpage_style, subpages[0], 0);
+				app.bind('.mui-bar-tab', 'a', 'tap', function(el){
+					var targetTab = el.getAttribute('href');
+			        if (targetTab == activeTab) {
+			            return;
+			        }
+			        plus.webview.show(targetTab,"slide-in-right",plus.os.ios ? 200 : 100);
+			        //隐藏当前
+			        plus.webview.hide(activeTab);
+			        //更改当前活跃的选项卡
+			        activeTab = targetTab;
+				});
+			}
+			
+			var url = 'ws://127.0.0.1:2349';
+			var ws = new WebSocket(url);
+		    ws.onopen = function(evt) {
+		        console.log("Connection open ...");
+		        //发送 连接 tcp_server;
+		        var data = {};
+		        data['type'] = 'connect';
+		        data['data'] = {'token' : token};
+		        ws.send(JSON.stringify(data));
+		    };
+   
+    		ws.onmessage = function(evt) {
+        		var data = JSON.parse(evt.data);
+       		}
+
+
+		    ws.onerror = function(evt){
+		        console.log("Connection error");
+		    };
+		    
+		    ws.onclose = function(evt) {
+		        console.log("Connection closed.");
+		        reConnect();
+		    };
+    		
+    		app.event('wss', function(e){
+      			ws.send(JSON.stringify(e.detail.data));
+    		});
+    		
+    		function reConnect(){
+			    console.log("socket 连接断开，正在尝试重新建立连接");
+			    ws = new WebSocket(url);
+			}
+      		
+		</script>
+	</body>
+
+</html>

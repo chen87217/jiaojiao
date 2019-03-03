@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>昵称</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script type="text/javascript" src="../../js/mui.min.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="../../css/mui.min.css"  />
+		<link rel="stylesheet" href="../../css/app.css"  />
+		<style>
+			.my-content{ margin-top: 40px; margin-left: auto; margin-right: auto; text-align: center;}
+	    	#title{ font-size: 20px; font-weight: 600; line-height: 32px; }
+	    	.remark{ font-size: 12px; color:rgba(0, 0, 0, 0.5); line-height: 20px; margin-top: 5px;}
+	    	form{ margin-top:50px;}
+	    	.body-input{ width: 80%; margin:auto auto; position: relative;}
+	    	.body-input input{ border-left: 0px; border-right: 0px; border-top:0px; padding-left: 0;}
+	    	
+	    	.body-button{ margin-top:40px;}
+	    	#btn_sumbit{  
+	    		background-color:#70b163;;
+			    color:white;
+			    border-radius: 2em;
+			    width:80%;
+			    font-size: 17px;
+			    border: none;
+			}
+			
+		</style>
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-transparent">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		</header>
+		<div class='zwf'></div>
+		<div class="mui-content my-content">
+			<div id='title'>我的昵称</div>
+			<form>
+				<div class="body-input">
+					<input type="text" id="userName"  placeholder="" /> 
+					<span>6</span>
+				</div>
+				<div class="body-button">
+				   <button type="button" id="btn_sumbit">保存</button>
+				</div>
+			</form>
+		</div>
+		<script type="text/javascript" src="../../js/app.js" charset="utf-8"></script>
+		<script type="text/javascript">
+			
+			var btn_sumbit = document.getElementById('btn_sumbit');
+			var userName = document.getElementById('userName');
+			btn_sumbit.disabled = true;
+			btn_sumbit.style.backgroundColor = '#d7d7d7';
+			
+			app.init({}, false, true, false);
+			
+			g_mui.plusReady(function(){
+				var self = plus.webview.currentWebview();
+				userName.value = self.curr_val;
+			});
+			
+			
+			app.listen(userName, 'input', function(el){
+				if(el.value.length > 0){
+		  			if(el.value.length >= 6){
+		  				el.value = el.value.substring(0, 6);
+		  			}
+		    		btn_sumbit.disabled = false;
+		    		btn_sumbit.style.backgroundColor = '#70b163';
+		  		}else{
+		    		btn_sumbit.disabled = true;
+		    		btn_sumbit.style.backgroundColor = '#d7d7d7';
+		  		}
+			});
+			
+			app.listen(btn_sumbit, 'tap', function(){
+				var name = userName.value ? userName.value.trim() : "";
+				if(name == ""){
+					msg = '请先输入昵称！';
+					options = {};
+					options.duration = 2000;
+					options.location = 'bottom';
+					app.toast(msg, options);
+				    return ;
+				}
+				
+				app.ajax('/Member/Update', { token:token, userName: name }, function(data){
+					if(data.code == 0){
+						app.tigger('account','update_set',{ 
+			                v:name,
+			                k:'userName'
+			            });
+						g_mui.back(); 
+					}else{
+						app.tigger('account','update_set',{ 
+			                v:name,
+			                k:'userName'
+			            });
+						g_mui.back(); 
+					}
+				})
+				
+			});
+			
+		</script>
+	</body>
+
+</html>

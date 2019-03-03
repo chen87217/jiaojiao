@@ -1,0 +1,107 @@
+{
+  "main.html": {
+    "refer": [
+      "html/member/login.html",
+      "html/member/regedit.html",
+      "index.html",
+      "html/chat/lists.html",
+      "html/tags/search.html",
+      "html/member/account.html",
+      "html/member/mine.html"
+    ],
+    "resources": [
+      "html/chat/lists.html"
+    ]
+  },
+  "index.html": {
+    "refer": [
+      "html/member/login.html",
+      "html/member/regedit.html"
+    ],
+    "resources": []
+  },
+  "html/member/login.html": {
+    "refer": [
+      "html/member/regedit.html",
+      "main.html"
+    ],
+    "resources": []
+  },
+  "html/member/mine.html": {
+    "refer": [
+      "html/member/account.html",
+      "html/member/credit.html",
+      "html/setting/index.html",
+      "html/tags/mytag.html"
+    ],
+    "resources": []
+  },
+  "html/setting/index.html": {
+    "refer": [
+      "html/setting/about.html",
+      "html/setting/advise.html",
+      "index.html"
+    ],
+    "resources": []
+  },
+  "html/member/account.html": {
+    "refer": [
+      "html/member/nickname.html",
+      "html/member/sex.html",
+      "html/member/sign.html"
+    ],
+    "resources": []
+  },
+  "html/tags/mytag.html": {
+    "refer": [
+      "html/tags/addTags.html",
+      "html/tags/desc.html"
+    ],
+    "resources": []
+  },
+  "html/tags/desc.html": {
+    "refer": [
+      "html/tags/news.html",
+      "html/tags/topic.html"
+    ],
+    "resources": []
+  },
+  "html/tags/search.html": {
+    "refer": [
+      "html/tags/addTopic.html"
+    ],
+    "resources": []
+  },
+  "html/tags/addTopic.html": {
+    "refer": [
+      "html/tags/setNumber.html",
+      "html/tags/setTitle.html"
+    ],
+    "resources": []
+  },
+  "html/chat/lists.html": {
+    "refer": [
+      "html/chat/group.html",
+      "html/chat/top.html"
+    ],
+    "resources": []
+  },
+  "html/chat/top.html": {
+    "refer": [
+      "html/chat/group.html"
+    ],
+    "resources": []
+  },
+  "html/chat/group.html": {
+    "refer": [
+      "html/member/homepage.html"
+    ],
+    "resources": []
+  },
+  "html/member/homepage.html": {
+    "refer": [
+      "html/chat/single.html"
+    ],
+    "resources": []
+  }
+}

@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script type="text/javascript" src="../../js/mui.min.js" charset="utf-8"></script>
+		<link rel="stylesheet"  href="../../css/mui.min.css" />
+		<link  rel="stylesheet"  href="../../css/app.css"  />
+		
+		<style type="text/css">
+	    	
+			.mui-card{ box-shadow: none;}
+			.mui-card>.mui-table-view>.mui-table-view-cell:last-child:after{ height: 1px;}
+			.mui-table-view-cell i{ display: inline-block; font-size:20px; color:rgba(0, 0, 0, 0.18);}
+			.mui-media-body{ line-height: 42px;font-size:16px;color:rgba(16, 16, 16, 1);font-family: Arial;}
+			.exit{ color: rgba(139, 195, 74, 1);}
+	    </style>
+		
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-transparent">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		</header>
+		<div class='zwf'></div>
+		<div class='title'>设置</div>
+		
+		<div class="mui-content">
+			<div class="mui-card" style="margin-bottom: 35px;">
+				<ul class="mui-table-view mui-table-view-chevron">
+					<li class="mui-table-view-cell mui-media" data-url='about.html' data-id='about'>
+						<a class="mui-navigate-right" >
+							<div class="mui-media-body">
+								关于交交
+							</div>
+						</a>
+					</li>
+					<li class="mui-table-view-cell mui-media" data-url='advise.html' data-id='advise'>
+						<a class="mui-navigate-right">
+							<div class="mui-media-body">
+								产品建议
+							</div>
+						</a>
+					</li>
+					
+					<li class="mui-table-view-cell mui-media margin-40" data-url='' id='exit'>
+						<a href='#'>
+							<div class="mui-media-body exit">
+								退出登录
+							</div>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<script type="text/javascript" src="../../js/app.js" charset="utf-8"></script>
+		<script type="text/javascript">
+			app.init({}, false, true, false);
+			
+			var exit1 = document.getElementById('exit');
+			app.bind('.mui-table-view', 'li', 'tap', function(el){
+				var href = el.getAttribute('data-url');
+				
+				if(href != ''){
+					args = {};
+					args.url = href;
+					args.id = el.getAttribute('data-id');
+					app.open(args);
+				}
+				
+			});
+			
+			
+			app.listen(exit1, 'tap', function(){
+				jsonData = {};
+				jsonData.buttons = [{title:"退出登录",style:"destructive"}];
+				
+				app.actionSheet(jsonData, function(e){
+					var index = e.index;
+					switch (index){
+						case 0:
+							break;
+						case 1:
+							exit();
+							break;
+					}
+					
+				});
+			});
+			
+			function exit(){
+				window.localStorage.removeItem('token');
+				args = {};
+				args.url = "../../index.html";
+				args.id = "index";
+				args.show = {};
+				args.show.aniShow = 'slide-in-left';
+				
+				app.open(args);
+			}
+			
+		</script>
+	</body>
+
+</html>

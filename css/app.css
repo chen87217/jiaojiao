@@ -1,0 +1,90 @@
+/*清除浮动*/
+.clearfix{ clear:both; height: 0px;}
+
+/*定位*/
+.local-relative{ position: relative;}
+.local-absolute{ position: absolute;}
+.local-fixed{ position: fixed;}
+
+/*边距*/
+.margin-10{ margin-top: 10px;}
+.margin-20{ margin-top: 20px;}
+.margin-30{ margin-top: 30px;}
+.margin-40{ margin-top: 40px;}
+.margin-50{ margin-top: 50px;}
+.margin-60{ margin-top: 60px;}
+.margin-70{ margin-top: 70px;}
+.margin-80{ margin-top: 80px;}
+.margin-90{ margin-top: 90px;}
+
+/*评分等级样式*/
+.level1{ color:rgba(37, 155, 36, 1); }
+.level2{ }
+.level3{ }
+.level4{ }
+.level5{ }
+.level6{ }
+
+body{ background-color: #fff;  height: 100%; }
+input[type=text], textarea { border-radius: 0px;}
+
+/*intput[textarea]  placehoder的样式*/
+input[class=my-placehoder]::-webkit-input-placeholder, textarea[class=my-placehoder]::-webkit-input-placeholder{
+	color:rgba(0, 0, 0, 0.12);
+	font-size:16px;
+}
+
+input[class=my-placehoder]::-moz-placeholder, textarea[class=my-placehoder]::-moz-placeholder{
+	color:rgba(0, 0, 0, 0.12);
+	font-size:16px;
+}
+
+input[class=my-placehoder]::-ms-input-placeholder, textarea[class=my-placehoder]::--ms-input-placeholder{
+	color:rgba(0, 0, 0, 0.12);
+	font-size:16px;
+}
+
+
+/*logo 样式*/
+.logo{ display: flex; justify-content: center;}
+.logo img{ width:120px; height:120px; }
+
+/*按钮组*/
+.btn-group{ display: flex;}
+.btn-group div{ flex: 1;}
+
+#header a{ color: rgba(0, 0, 0, 0.4);}
+.zwf{ height:44px; line-height: 44px; display: inline-block;}
+
+.title{ 
+	margin-left:1rem;
+	margin-top:10px;
+	font-size:35px;
+	color: rgba(139, 195, 74, 1);
+	height: 85px;
+	line-height: 85px;
+	font-family: Arial;
+	font-weight: 700;
+}
+
+
+.mui-content{ background-color: #fff; }
+
+/*mui-card 样式修改*/
+.mui-card{  box-shadow: none; }
+.mui-content>.mui-card:first-child{ margin-top: 0px;}
+.mui-table-view-cell{ padding-left:10px;}
+.mui-table-view-cell:after{ left: 0px;}
+
+/*输入框右侧显示数字*/
+.body-input span{     
+	font-size: 12px;
+	position: absolute;
+	z-index: 1;
+	top: 10px;
+	right: 0;
+	width: 38px;
+	height: 38px;
+	text-align: center;
+	color: #ddd;
+}

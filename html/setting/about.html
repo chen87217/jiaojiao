@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script type="text/javascript" src="../../js/mui.min.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="../../css/mui.min.css"  />
+		<link  rel="stylesheet"  href="../../css/app.css"  />
+		
+		<style>
+	    	.my-content{ margin-top: 80px;}
+	    	.my-content div{ width: 100%; margin:auto auto; text-align: center; }
+	    	.logo img{ width: 80px; height: 80px;}
+	    	.slogan{ margin-top: 20px !important;}
+	    	.slogan p{ color: rgba(0, 0, 0, 1); font-size:13px;}
+	    	
+	    	.loginbutton{ display: flex; justify-content: center; margin-top: 4rem !important;}
+	    	#update{ background-color: rgba(139, 195, 74, 1); color:#fff; border:none; width:70%; border-radius: 2em; margin-left: auto; margin-right: auto; text-align: center;}
+	    	#update:active{ background-color: rgba(139, 195, 74, 0.8); color:#fff;}
+	    </style>
+		
+	</head>
+
+	<body>
+		
+		<header id="header" class="mui-bar mui-bar-transparent">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		</header>
+		<div class='zwf'></div>
+		
+		<div class="mui-content my-content">
+			<div><img src="../../image/logo.png" width="80"></div>
+			<div class="slogan">
+				<p>交交是一款基于身份标签的聊天软件</p>
+				<p>随时找到你需要的人</p>
+			</div>
+			
+			<div class="loginbutton">
+				<button type="button" id="update" data-loading-text="正在下载..."  data-loading-icon="mui-spinner mui-spinner-custom">更新版本</button>
+			</div>
+		</div>
+		
+		<script type="text/javascript" src="../../js/app.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/jquery.min.js" charset="utf-8"></script>
+		<script type="text/javascript">
+			
+			var update = document.getElementById('update');
+			update.style.display = 'none';
+			app.init({}, false, true, false);
+			
+			var ver;  //当前版本
+			g_mui.plusReady(function(){ 
+				
+				plus.runtime.getProperty(plus.runtime.appid, function(inf) {
+					ver = inf.version;
+					var client;
+						
+					deveice = app.isMoblie();
+				
+				
+					if(deveice == 1) {    //苹果手机    
+						app.ajax( ios_url, { id:ios_app_id }, function(data){
+							if(data.code == 0){
+							    $.each(data.data, function(i,norms) {
+		                            $.each(norms, function(key,value) {
+		                                $.each(value, function(j, normItem) {
+		                                    if(j=="version"){
+		                                    	//if(compareVersion(ver , normItem))
+		                                        if(normItem>ver){  
+		                                        	update.style.display = 'block';
+		                                           	document.location.href= ios_down_path; //上新APPStore下载地址
+		                                        }
+		                                    }                            
+		                                });                
+		                            });
+		                        });     
+							}
+						}, 'get', 3000, true, {
+							contentType:'application/x-www-form-urlencoded;charset=UTF-8'
+						});
+	                }else if(deveice == 2){
+						app.ajax(android_url, { token: token }, function(data){
+							if(data.code == 0){
+								if(compareVersion(ver, data.data.Version)){
+									update.style.display = 'block';
+									var dtask = plus.downloader.createDownload(data.data.apkUrl, {}, function(d, status) {
+										if (status == 200) {   
+											plus.nativeUI.toast("正在准备环境，请稍后！");
+											sleep(1000);
+											var path = d.filename;//下载apk
+											plus.runtime.install(path); // 自动安装apk文件
+										}else{
+											alert('版本更新失败:' + status);
+										}
+									});
+									dtask.start(); 
+								}
+							}
+						});
+					}
+				});
+			});
+		
+			
+			/**
+		     * 比较版本大小，如果新版本nv大于旧版本ov则返回true，否则返回false
+		     * @param {String} ov
+		     * @param {String} nv
+		     * @return {Boolean}
+		     */
+		    function compareVersion(ov, nv) {
+		        if (!ov || !nv || ov == "" || nv == "") {
+		            return false;
+		        }
+		        var b = false,
+		            ova = ov.split(".", 4),
+		            nva = nv.split(".", 4);
+		        for (var i = 0; i < ova.length && i < nva.length; i++) {
+		            var so = ova[i],
+		                no = parseInt(so),
+		                sn = nva[i],
+		                nn = parseInt(sn);
+		            if (nn > no || sn.length > so.length) {
+		                return true;
+		            } else if (nn < no) {
+		                return false;
+		            }
+		        }
+		        if (nva.length > ova.length && 0 == nv.indexOf(ov)) {
+		            return true;
+		        }
+		    }
+				
+		
+		</script>
+	</body>
+
+</html>

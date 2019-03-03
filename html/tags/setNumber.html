@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>群发人数</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script type="text/javascript" src="../../js/mui.min.js" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css"/>
+	    <link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
+	    <link  rel="stylesheet"  href="../../css/app.css"  />
+	    <style>
+			.my-content{ margin-top: 40px; margin-left: auto; margin-right: auto; text-align: center;}
+	    	#title{ font-size: 20px; font-weight: 600; line-height: 32px; }
+	    	.remark{ font-size: 12px; color:rgba(0, 0, 0, 0.5); line-height: 20px; margin-top: 5px;}
+	    	form{ margin-top:50px;}
+	    	.body-input{ width: 80%; margin:auto auto;}
+	    	.body-input input{ border-left: 0px; border-right: 0px; border-top:0px; padding-left: 0;}
+	    	.body-button{ margin-top:40px;}
+	    	#btn_sumbit{  
+	    		background-color:#70b163;;
+			    color:white;
+			    border-radius: 2em;
+			    width:80%;
+			    font-size: 17px;
+			    border: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		
+		<header id="header" class="mui-bar mui-bar-transparent">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		</header>
+		<div class='zwf'></div>
+		<div class="mui-content my-content">
+			<div id='title'>群发人数</div>
+			<form>
+				<div class="body-input">
+					<input type="text" name="number" id="number"  placeholder="" />
+				</div>
+				<div class="body-button">
+				   <button type="button" id="btn_sumbit">确定</button>
+				</div>
+			</form>
+		</div>
+		
+		<script type="text/javascript" src="../../js/app.js" charset="utf-8"></script>
+		<script type="text/javascript">
+			
+			var btn_sumbit = document.getElementById('btn_sumbit');
+			var number = document.getElementById('number');
+			btn_sumbit.disabled = true;
+			btn_sumbit.style.backgroundColor = '#d7d7d7';
+			app.init({}, false, true, false);
+			
+			var max = 1;  //最大人数
+			g_mui.plusReady(function() {
+			});
+			
+			app.listen(btn_sumbit, 'tap', function(){
+				var num = number.value ? number.value.trim() : "";
+				if(num == "" || parseInt(num) <= 0){
+					msg = '请先设置发送人数！';
+					options = {};
+					options.duration = 2000;
+					options.location = 'bottom';
+				   	app.toast(msg, options);
+				    return ;
+				}
+				
+				//todo 将数据  传到 父页面
+			});
+			
+			app.listen(number, 'input', function(el){
+		  		if(parseInt(number.value) > 0){
+		  			if(parseInt(number.value) > max){
+		  				number.value = max;
+		  			}
+		    		btn_sumbit.disabled = false;
+		    		btn_sumbit.style.backgroundColor = '#70b163';
+		  		}else{
+		    		btn_sumbit.disabled = true;
+		    		btn_sumbit.style.backgroundColor = '#d7d7d7';
+		  		}
+			});
+			
+		</script>
+	</body>
+
+</html>
